@@ -1,8 +1,8 @@
 ---
-name: "✨ [feat] 기능 추가"
-about: 새로운 기능 추가 템플릿
-title: "✨ [feat] "
-labels: "✨ feature"
+name: "\U0001F41B [fix] 버그 수정"
+about: 버그 수정을 위한 템플릿
+title: "\U0001F41B [fix] "
+labels: "\U0001F41B fix"
 assignees: ''
 
 ---

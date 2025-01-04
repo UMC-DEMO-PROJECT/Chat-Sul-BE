@@ -1,8 +1,8 @@
 ---
-name: "✨ [feat] 기능 추가"
-about: 새로운 기능 추가 템플릿
-title: "✨ [feat] "
-labels: "✨ feature"
+name: "♻️ [refactor] 코드 리팩토링"
+about: 리팩토링을 위한 템플릿
+title: "♻️ [refactor] "
+labels: "♻️ refactor"
 assignees: ''
 
 ---

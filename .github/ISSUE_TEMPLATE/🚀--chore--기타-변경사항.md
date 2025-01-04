@@ -1,8 +1,8 @@
 ---
-name: "✨ [feat] 기능 추가"
-about: 새로운 기능 추가 템플릿
-title: "✨ [feat] "
-labels: "✨ feature"
+name: "\U0001F680 [chore] 기타 변경사항"
+about: 기타 변경사항을 위한 템플릿
+title: "\U0001F680 [chore] "
+labels: "\U0001F680 chore"
 assignees: ''
 
 ---
