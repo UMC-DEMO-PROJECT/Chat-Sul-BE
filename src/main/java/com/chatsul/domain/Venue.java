@@ -2,16 +2,15 @@ package com.chatsul.domain;
 
 import com.chatsul.domain.common.BaseEntity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -51,4 +50,7 @@ public class Venue extends BaseEntity {
 	// 가게 은행
 	@Column(nullable = false, length = 50)
 	private String bank;
+
+	@OneToMany(mappedBy = "venue", cascade = CascadeType.ALL)
+	private List<Reservation> reservationList = new ArrayList<>();
 }
