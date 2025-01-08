@@ -22,10 +22,11 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
     private final MemberRepository memberRepository;
 
     @Override
-    public Reservation createReservation(ReservationRequestDTO.MakeReservationRequestDTO request) {
+    public Reservation createReservation(ReservationRequestDTO.MakeReservationRequestDTO request, Long venueId) {
 
-        Venue venue = venueRepository.findById(request.getVenueId())
+        Venue venue = venueRepository.findById(venueId)
                 .orElseThrow(() -> new IllegalArgumentException("매장 정보가 존재하지 않습니다."));
+
         Member member = memberRepository.findById(request.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보가 존재하지 않습니다."));
 

@@ -6,8 +6,10 @@ import com.chatsul.domain.Venue;
 import com.chatsul.domain.enums.ReservationStatus;
 import com.chatsul.web.dto.ReservationRequestDTO;
 import com.chatsul.web.dto.ReservationResponseDTO;
+import org.springframework.data.domain.Page;
 
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class ReservationConverter {
@@ -17,6 +19,9 @@ public class ReservationConverter {
                 .reservationId(reservation.getReservationId())
                 .reservationDate(reservation.getReservationDate())
                 .reservationTime(reservation.getReservationTime())
+                .venueName(reservation.getVenue().getName())
+                .status(reservation.getStatus())
+                .createdAt(reservation.getCreatedAt())
                 .build();
     }
     public static Reservation toReservation(ReservationRequestDTO.MakeReservationRequestDTO reservation, Venue venue, Member member) {
@@ -30,6 +35,32 @@ public class ReservationConverter {
                 .status(ReservationStatus.WAITING_DEPOSIT)
                 .venue(venue)
                 .member(member)
+                .build();
+    }
+
+    public static ReservationResponseDTO.ReservationPreViewDTO reservationPreViewDTO(Reservation reservation) {
+        return ReservationResponseDTO.ReservationPreViewDTO.builder()
+                .reservationId(reservation.getReservationId())
+                .venueName(reservation.getVenue().getName())
+                .reservationDate(reservation.getReservationDate())
+                .reservationTime(reservation.getReservationTime())
+                .numberOfGuests(reservation.getNumberOfGuests())
+                .status(reservation.getStatus())
+                .build();
+    }
+
+    public static ReservationResponseDTO.ReservationPreViewListDTO reservationPreViewListDTO(Page<Reservation> reservationList) {
+        List<ReservationResponseDTO.ReservationPreViewDTO> reservationPreViewDTOList = reservationList.stream()
+                .map(ReservationConverter::reservationPreViewDTO)
+                .collect(Collectors.toList());
+
+        return ReservationResponseDTO.ReservationPreViewListDTO.builder()
+                .reservationList(reservationPreViewDTOList)
+                .listSize(reservationPreViewDTOList.size())
+                .totalPage(reservationList.getTotalPages())
+                .totalElements(reservationList.getTotalElements())
+                .isFirst(reservationList.isFirst())
+                .isLast(reservationList.isLast())
                 .build();
     }
 }
