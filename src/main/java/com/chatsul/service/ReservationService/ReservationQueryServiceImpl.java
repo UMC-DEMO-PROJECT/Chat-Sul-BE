@@ -7,8 +7,12 @@ import com.chatsul.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +25,13 @@ public class ReservationQueryServiceImpl implements ReservationQueryService {
     @Override
     public Page<Reservation> getReservationList(Long userId, Integer page) {
         Member member = memberRepository.findById(userId).get();
-        Page<Reservation> reservationPage = reservationRepository.findAllByMember(member, PageRequest.of(page, 10));
+        LocalDate currentDate = LocalDate.now();
+
+        // 예약 날짜 순으로 정렬 (오름차순)
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.ASC, "reservationDate"));
+
+        Page<Reservation> reservationPage = reservationRepository.findByMemberAndReservationDateAfter
+                (member, currentDate, pageRequest);
 
         return reservationPage;
     }
