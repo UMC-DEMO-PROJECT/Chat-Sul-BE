@@ -63,4 +63,13 @@ public class ReservationController {
         Page<Reservation> reservationList = reservationQueryService.getReservationList(userId, page);
         return ApiResponse.onSuccess(ReservationConverter.reservationPreViewListDTO(reservationList));
     }
+
+    @Operation(summary = "예약 취소 API",
+            description = "예약 취소 API 입니다.<br>")
+    @DeleteMapping("/cancel/{reservationId}")
+    public ApiResponse<String> cancelReservation(
+            @PathVariable("reservationId") Long reservationId, @RequestParam("userId") Long userId) {
+        reservationCommandService.cancelReservation(reservationId, userId);
+        return ApiResponse.onSuccess("예약이 취소되었습니다.");
+    }
 }

@@ -47,4 +47,8 @@ public class Reservation extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public void setStatus(ReservationStatus status) {
+        this.status = status;
+    }
 }
