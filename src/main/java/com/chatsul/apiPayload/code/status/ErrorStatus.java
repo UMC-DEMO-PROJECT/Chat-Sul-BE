@@ -22,14 +22,15 @@ public enum ErrorStatus implements BaseErrorCode {
 
 	// Member
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER404", "멤버를 찾을 수 없습니다."),
+	MEMBER_EXIST(HttpStatus.CONFLICT, "MEMBER409", "멤버가 이미 존재합니다."),
 
 	// Jwt
 	EMPTY_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN400", "헤더에 토큰이 비어 있습니다."),
 	INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN401", "토큰이 유효하지 않습니다."),
-	REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "TOKEN404", "리프레시 토큰을 찾을 수 없습니다."),
 	INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "TOKEN402", "토큰이 만료되었습니다. 재로그인해주세요."),
 	INVALID_HEADER_FORMAT(HttpStatus.BAD_REQUEST, "TOKEN403", "헤더 형식이 올바르지 않습니다."),
-	EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN404", "토큰이 만료되었습니다."),
+	REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "TOKEN404", "리프레시 토큰을 찾을 수 없습니다."),
+	EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN405", "토큰이 만료되었습니다."),
 
 	// OAuth
 	OAUTH_TOKEN_FAIL(HttpStatus.BAD_REQUEST,"OAUTH400","토큰 변경 실패"),
