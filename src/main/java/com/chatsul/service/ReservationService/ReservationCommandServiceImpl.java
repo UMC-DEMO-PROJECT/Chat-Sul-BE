@@ -46,7 +46,7 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("예약 정보가 존재하지 않습니다."));
 
-        if (!reservation.getMember().getUserId().equals(userId)) {
+        if (!reservation.getMember().getId().equals(userId)) {
             throw new IllegalArgumentException("취소 권한이 없습니다.");
         }
 
