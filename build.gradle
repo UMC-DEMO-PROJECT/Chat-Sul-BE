@@ -56,14 +56,16 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-clean {
-	delete fileTree(dir: 'src/main/generated', include: '**/*.java')
+def querydslDir = "src/main/generated"
+
+sourceSets {
+	main.java.srcDirs += [ querydslDir ]
 }
+
 tasks.withType(JavaCompile) {
-	options.compilerArgs += [
-			'--add-opens',
-			'java.base/java.lang=ALL-UNNAMED',
-			'--add-opens',
-			'java.base/java.util=ALL-UNNAMED'
-	]
+	options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
+}
+
+clean.doLast {
+	file(querydslDir).deleteDir()
 }
