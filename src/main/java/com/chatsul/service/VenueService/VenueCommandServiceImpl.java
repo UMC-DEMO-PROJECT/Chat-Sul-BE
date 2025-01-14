@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.chatsul.domain.Member;
 import com.chatsul.domain.Venue;
 import com.chatsul.repository.VenueRepository;
 import com.chatsul.web.dto.VenueRequestDTO;
@@ -20,7 +21,7 @@ public class VenueCommandServiceImpl implements VenueCommandService {
 	private final KakaoMapService kakaoMapService;
 
 	@Override
-	public Venue createVenue(VenueRequestDTO request) {
+	public Venue createVenue(Member member, VenueRequestDTO request) {
 		Map<String, Double> coordinates = kakaoMapService.getCoordinates(request.getAddress());
 
 		Double latitude = coordinates.get("latitude");
@@ -34,6 +35,7 @@ public class VenueCommandServiceImpl implements VenueCommandService {
 			.longitude(longitude)
 			.account(request.getAccount())
 			.bank(request.getBank())
+			.member(member)
 			.build();
 
 		return venueRepository.save(venue);
