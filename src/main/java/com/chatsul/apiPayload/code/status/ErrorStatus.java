@@ -17,8 +17,12 @@ public enum ErrorStatus implements BaseErrorCode {
 	_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "COMMON401", "인증이 필요합니다."),
 	_FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
-	// 예약 2일 전 취소 불가
-	CANCEL_RESERVATION_BEFORE_2DAYS(HttpStatus.BAD_REQUEST, "CANCEL4001", "예약 2일 전에는 취소가 불가능합니다."),
+	// Reservation
+	CANCEL_RESERVATION_BEFORE_2DAYS(HttpStatus.BAD_REQUEST, "CANCEL401", "예약 2일 전에는 취소가 불가능합니다."),
+	RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "RESERVATION404", "예약 정보가 존재하지 않습니다."),
+
+	// Venue
+	VENUE_NOT_FOUND(HttpStatus.NOT_FOUND, "VENUE404", "매장을 찾을 수 없습니다."),
 
 	// Member
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER404", "멤버를 찾을 수 없습니다."),
