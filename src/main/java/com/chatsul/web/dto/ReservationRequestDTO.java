@@ -20,6 +20,5 @@ public class ReservationRequestDTO {
         @Min(value = 1, message = "최소 1명 이상 입력해주세요")
         private int numberOfGuests;
         private String depositorName;
-        private Long userId;
     }
 }

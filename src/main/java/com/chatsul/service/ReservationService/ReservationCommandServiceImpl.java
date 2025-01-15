@@ -24,16 +24,16 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
 
     private final ReservationRepository reservationRepository;
     private final VenueRepository venueRepository;
-    private final MemberRepository memberRepository;
 
     @Override
-    public Reservation createReservation(ReservationRequestDTO.MakeReservationRequestDTO request, Long venueId) {
+    public Reservation createReservation(ReservationRequestDTO.MakeReservationRequestDTO request, Long venueId, Member member) {
 
         Venue venue = venueRepository.findById(venueId)
-                .orElseThrow(() -> new IllegalArgumentException("매장 정보가 존재하지 않습니다."));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.VENUE_NOT_FOUND));
 
-        Member member = memberRepository.findById(request.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("회원 정보가 존재하지 않습니다."));
+        if (member == null || member.getId() == null) {
+            throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
+        }
 
         Reservation reservation = ReservationConverter.toReservation(request, venue, member);
 
@@ -41,13 +41,13 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
     }
 
     @Override
-    public void cancelReservation(Long reservationId, Long userId) {
+    public void cancelReservation(Long reservationId, Member member) {
 
         Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new IllegalArgumentException("예약 정보가 존재하지 않습니다."));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.RESERVATION_NOT_FOUND));
 
-        if (!reservation.getMember().getId().equals(userId)) {
-            throw new IllegalArgumentException("취소 권한이 없습니다.");
+        if (!reservation.getMember().equals(member)) {
+            throw new GeneralException(ErrorStatus._FORBIDDEN);
         }
 
         LocalDate currentDate = LocalDate.now();

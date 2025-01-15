@@ -1,7 +1,9 @@
 package com.chatsul.web.controller;
 
+import com.chatsul.annotation.CurrentMember;
 import com.chatsul.apiPayload.ApiResponse;
 import com.chatsul.converter.ReservationConverter;
+import com.chatsul.domain.Member;
 import com.chatsul.domain.Reservation;
 import com.chatsul.service.ReservationService.ReservationCommandService;
 import com.chatsul.service.ReservationService.ReservationQueryService;
@@ -35,7 +37,6 @@ public class ReservationController {
                                     name = "예약 요청 예시",
                                     value = "{\n" +
                                             "  \"reservationName\": \"홍길동\",\n" +
-                                            "  \"userId\": 1,\n" +
                                             "  \"phoneNumber\": \"01012345678\",\n" +
                                             "  \"reservationDate\": \"2025-01-08\",\n" +
                                             "  \"reservationTime\": \"20:30\",\n" +
@@ -49,8 +50,8 @@ public class ReservationController {
     @PostMapping("/{venueId}")
     public ApiResponse<ReservationResponseDTO.ReservationResultDTO> createReservation(
             @PathVariable("venueId") Long venueId,
-            @RequestBody @Valid ReservationRequestDTO.MakeReservationRequestDTO request) {
-        Reservation reservation = reservationCommandService.createReservation(request, venueId);
+            @RequestBody @Valid ReservationRequestDTO.MakeReservationRequestDTO request, @CurrentMember Member member) {
+        Reservation reservation = reservationCommandService.createReservation(request, venueId, member);
         return ApiResponse.onSuccess(ReservationConverter.toReservationResultDTO(reservation));
     }
 
@@ -59,8 +60,8 @@ public class ReservationController {
                     + "WAITING_DEPOSIT: 입금 대기, WAITING_CONFIRMATION: 확정 대기, CONFIRMED: 확정, CANCELLED: 취소")
     @GetMapping("/list")
     public ApiResponse<ReservationResponseDTO.ReservationPreViewListDTO> getReservationList(
-            @RequestParam("userId") Long userId, @RequestParam("page") Integer page) {
-        Page<Reservation> reservationList = reservationQueryService.getReservationList(userId, page);
+            @CurrentMember Member member, @RequestParam("page") Integer page) {
+        Page<Reservation> reservationList = reservationQueryService.getReservationList(member, page);
         return ApiResponse.onSuccess(ReservationConverter.reservationPreViewListDTO(reservationList));
     }
 
@@ -68,8 +69,8 @@ public class ReservationController {
             description = "예약 취소 API 입니다.<br>")
     @DeleteMapping("/cancel/{reservationId}")
     public ApiResponse<String> cancelReservation(
-            @PathVariable("reservationId") Long reservationId, @RequestParam("userId") Long userId) {
-        reservationCommandService.cancelReservation(reservationId, userId);
+            @PathVariable("reservationId") Long reservationId,@CurrentMember Member member) {
+        reservationCommandService.cancelReservation(reservationId, member);
         return ApiResponse.onSuccess("예약이 취소되었습니다.");
     }
 }
