@@ -7,4 +7,5 @@ import org.springframework.data.domain.Page;
 public interface ReservationQueryService {
 
     Page<Reservation> getReservationList(Member member, Integer page);
+    Page<Reservation> getBusinessReservationList(Long venueId, String status, Integer page);
 }

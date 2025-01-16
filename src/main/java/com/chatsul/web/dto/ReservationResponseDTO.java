@@ -30,7 +30,7 @@ public class ReservationResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ReservationPreViewDTO {
+    public static class ReservationPreViewDTO { // 사용자 예약 확인
         String venueName;
         Long reservationId;
         LocalDate reservationDate;
@@ -45,6 +45,32 @@ public class ReservationResponseDTO {
     @AllArgsConstructor
     public static class ReservationPreViewListDTO {
         List<ReservationPreViewDTO> reservationList;
+        Integer listSize;
+        Integer totalPage;
+        Long totalElements;
+        Boolean isFirst;
+        Boolean isLast;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BusinessReservationPreViewDTO { // 사장님 예약 확인
+        String reservationName; // 예약자명
+        Long reservationId;
+        LocalDate reservationDate;
+        LocalTime reservationTime;
+        int numberOfGuests;
+        ReservationStatus status;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BusinessReservationPreViewListDTO {
+        List<BusinessReservationPreViewDTO> reservationList;
         Integer listSize;
         Integer totalPage;
         Long totalElements;

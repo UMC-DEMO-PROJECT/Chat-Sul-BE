@@ -55,8 +55,8 @@ public class ReservationController {
         return ApiResponse.onSuccess(ReservationConverter.toReservationResultDTO(reservation));
     }
 
-    @Operation(summary = "예약 확인 API",
-            description = "예약 내역(대관 내역)을 확인하는 API 입니다.<br>"
+    @Operation(summary = "사용자 예약 확인 API",
+            description = "사용자가 예약 내역(대관 내역)을 확인하는 API 입니다.<br>"
                     + "WAITING_DEPOSIT: 입금 대기, WAITING_CONFIRMATION: 확정 대기, CONFIRMED: 확정, CANCELLED: 취소")
     @GetMapping("/list")
     public ApiResponse<ReservationResponseDTO.ReservationPreViewListDTO> getReservationList(
@@ -65,12 +65,23 @@ public class ReservationController {
         return ApiResponse.onSuccess(ReservationConverter.reservationPreViewListDTO(reservationList));
     }
 
-    @Operation(summary = "예약 취소 API",
-            description = "예약 취소 API 입니다.<br>")
+    @Operation(summary = "사용자 예약 취소 API",
+            description = "사용자가 예약을 취소하는 API 입니다.<br>")
     @DeleteMapping("/cancel/{reservationId}")
     public ApiResponse<String> cancelReservation(
             @PathVariable("reservationId") Long reservationId,@CurrentMember Member member) {
         reservationCommandService.cancelReservation(reservationId, member);
         return ApiResponse.onSuccess("예약이 취소되었습니다.");
+    }
+
+    // 사장님 로그인 구현 전까지는 venueId 받음
+    @Operation(summary = "사장님 예약 확인 API",
+            description = "사장님이 예약 내역을 확인하는 API 입니다.<br>"
+                    + "ALL: 모두, CONFIRMED: 확정, WAITING_DEPOSIT: 입금 대기, WAITING_CONFIRMATION: 확정 대기")
+    @GetMapping("/business/list/{venueId}")
+    public ApiResponse<ReservationResponseDTO.BusinessReservationPreViewListDTO> getBusinessReservationList(
+            @PathVariable("venueId") Long venueId, @RequestParam("status") String status, @RequestParam("page") Integer page) {
+        Page<Reservation> reservationList = reservationQueryService.getBusinessReservationList(venueId, status, page);
+        return ApiResponse.onSuccess(ReservationConverter.businessReservationPreViewListDTO(reservationList));
     }
 }
