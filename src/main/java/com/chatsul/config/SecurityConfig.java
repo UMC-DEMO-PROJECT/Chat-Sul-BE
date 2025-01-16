@@ -50,7 +50,7 @@ public class SecurityConfig {
 	};
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain filterChain(HttpSecurity http, CorsConfig corsConfig) throws Exception {
 		http
 			// 허용할 URL, 역할별로 나눌 URL, 인증을 요구하는 URL 설정
 			.authorizeHttpRequests(request -> request
@@ -58,6 +58,8 @@ public class SecurityConfig {
 				.requestMatchers(allowUrl).permitAll()
 				// 이외의 요청에 대해서는 인증이 필요하도록 설정
 				.anyRequest().authenticated())
+			// cors 필터 추가
+			.addFilter(corsConfig.corsFilter())
 			// jwtFilter를 UsernamePasswordAuthenticationFilter 앞에 오도록 설정
 			.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
 			// formLogin 비활성화
