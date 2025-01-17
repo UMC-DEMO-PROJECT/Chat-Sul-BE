@@ -8,4 +8,5 @@ public interface ReservationCommandService {
 
     Reservation createReservation(ReservationRequestDTO.MakeReservationRequestDTO request, Long venueId, Member member);
     void cancelReservation(Long reservationId, Member member);
+    void acceptReservation(Long reservationId, Long venueId);
 }

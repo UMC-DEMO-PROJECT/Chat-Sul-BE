@@ -69,7 +69,7 @@ public class ReservationController {
             description = "사용자가 예약을 취소하는 API 입니다.<br>")
     @DeleteMapping("/cancel/{reservationId}")
     public ApiResponse<String> cancelReservation(
-            @PathVariable("reservationId") Long reservationId,@CurrentMember Member member) {
+            @PathVariable("reservationId") Long reservationId, @CurrentMember Member member) {
         reservationCommandService.cancelReservation(reservationId, member);
         return ApiResponse.onSuccess("예약이 취소되었습니다.");
     }
@@ -83,5 +83,14 @@ public class ReservationController {
             @PathVariable("venueId") Long venueId, @RequestParam("status") String status, @RequestParam("page") Integer page) {
         Page<Reservation> reservationList = reservationQueryService.getBusinessReservationList(venueId, status, page);
         return ApiResponse.onSuccess(ReservationConverter.businessReservationPreViewListDTO(reservationList));
+    }
+
+    @Operation(summary = "예약 수락 API",
+            description = "사장님이 예약을 수락하는 API 입니다.<br>")
+    @PatchMapping("/business/{venueId}/accept/{reservationId}")
+    public ApiResponse<String> acceptReservation(
+            @PathVariable("venueId") Long venueId, @PathVariable("reservationId") Long reservationId) {
+        reservationCommandService.acceptReservation(reservationId, venueId);
+        return ApiResponse.onSuccess("예약이 수락되었습니다.");
     }
 }

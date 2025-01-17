@@ -57,4 +57,17 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
 
         reservation.setStatus(ReservationStatus.CANCELLED);
     }
+
+    @Override
+    public void acceptReservation(Long reservationId, Long venueId) {
+
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.RESERVATION_NOT_FOUND));
+
+        if (!reservation.getStatus().equals(ReservationStatus.WAITING_DEPOSIT)) {
+            throw new GeneralException(ErrorStatus.INVALID_RESERVATION_STATUS);
+        }
+
+        reservation.setStatus(ReservationStatus.WAITING_CONFIRMATION);
+    }
 }
