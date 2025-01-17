@@ -93,4 +93,13 @@ public class ReservationController {
         reservationCommandService.acceptReservation(reservationId, venueId);
         return ApiResponse.onSuccess("예약이 수락되었습니다.");
     }
+
+    @Operation(summary = "예약 거절 API",
+            description = "사장님이 예약을 거절하는 API 입니다.<br>")
+    @PatchMapping("/business/{venueId}/reject/{reservationId}")
+    public ApiResponse<String> rejectReservation(
+            @PathVariable("venueId") Long venueId, @PathVariable("reservationId") Long reservationId) {
+        reservationCommandService.rejectReservation(reservationId, venueId);
+        return ApiResponse.onSuccess("예약이 거절되었습니다.");
+    }
 }
