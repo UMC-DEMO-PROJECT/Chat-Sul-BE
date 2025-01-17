@@ -102,4 +102,13 @@ public class ReservationController {
         reservationCommandService.rejectReservation(reservationId, venueId);
         return ApiResponse.onSuccess("예약이 거절되었습니다.");
     }
+
+    @Operation(summary = "예약 확정 API",
+            description = "사장님이 예약을 확정하는 API 입니다.<br>")
+    @PatchMapping("/business/{venueId}/confirm/{reservationId}")
+    public ApiResponse<String> confirmReservation(
+            @PathVariable("venueId") Long venueId, @PathVariable("reservationId") Long reservationId) {
+        reservationCommandService.confirmReservation(reservationId, venueId);
+        return ApiResponse.onSuccess("예약이 확정되었습니다.");
+    }
 }
