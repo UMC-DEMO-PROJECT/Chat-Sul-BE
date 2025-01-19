@@ -6,11 +6,17 @@ import org.springframework.stereotype.Service;
 import com.chatsul.apiPayload.code.status.ErrorStatus;
 import com.chatsul.apiPayload.exception.GeneralException;
 import com.chatsul.converter.MemberConverter;
+import com.chatsul.converter.TokenConverter;
 import com.chatsul.domain.Member;
 import com.chatsul.domain.enums.Role;
 import com.chatsul.repository.MemberRepository;
+import com.chatsul.util.CookieUtil;
+import com.chatsul.util.JwtUtil;
 import com.chatsul.web.dto.MemberRequestDTO;
+import com.chatsul.web.dto.TokenResponseDTO;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +27,8 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final JwtUtil jwtUtil;
+	private final CookieUtil cookieUtil;
 
 	@Override
 	public Member joinMember(MemberRequestDTO.JoinDTO request) {
@@ -40,5 +48,25 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 		}
 		member.updateRoleTempToUser(request.getName(), request.getPhoneNumber());
 		return null;
+	}
+
+	@Override
+	public TokenResponseDTO.TokenDTO login(MemberRequestDTO.LoginDTO dto, HttpServletResponse response) {
+		Member loginMember = memberRepository.findByEmail(dto.getEmail())
+			.filter(m -> passwordEncoder.matches(dto.getPassword(), m.getPassword()))
+			.orElseThrow(
+				() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND)
+			);
+		// 새 RefreshToken 발급
+		String refreshToken = jwtUtil.generateRefreshToken(dto.getEmail());
+
+		// response에 cookie로 반환
+		Cookie cookie = cookieUtil.createCookie(refreshToken);
+		response.addCookie(cookie);
+
+		// AccessToken 발급
+		return TokenConverter.toTokenDTO(
+			jwtUtil.generateAccessToken(loginMember.getEmail())
+		);
 	}
 }

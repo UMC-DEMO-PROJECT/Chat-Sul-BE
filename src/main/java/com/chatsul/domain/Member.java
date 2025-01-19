@@ -21,7 +21,7 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 60)
     private String email;
 
     @Column(nullable = false)
@@ -39,7 +39,7 @@ public class Member extends BaseEntity {
     @Column(name = "provider", nullable = true, length = 10)
     private String provider;
 
-    @Column(name = "provider_id", nullable = true, length = 50)
+    @Column(name = "provider_id", nullable = true, length = 60)
     private String providerId;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)

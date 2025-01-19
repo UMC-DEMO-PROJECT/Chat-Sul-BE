@@ -9,7 +9,6 @@ import com.chatsul.annotation.CurrentMember;
 import com.chatsul.apiPayload.ApiResponse;
 import com.chatsul.domain.Member;
 import com.chatsul.service.MemberService.MemberCommandService;
-import com.chatsul.service.MemberService.MemberQueryService;
 import com.chatsul.web.dto.MemberRequestDTO;
 import com.chatsul.web.dto.TokenResponseDTO;
 
@@ -26,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
 	private final MemberCommandService memberCommandService;
-	private final MemberQueryService memberQueryService;
 
 	@PostMapping("/signup")
 	@Operation(summary = "일반 회원가입 API", description = "일반 유저로 회원가입하는 경우 사용하는 API입니다. (소셜 로그인 X)",
@@ -78,7 +76,7 @@ public class MemberController {
 		+ "accessToken은 로그인이 필요한 서비스의 경우 Authorization 헤더에 'Bearer (accessToken)' 형식으로 담아서 보내주세요.")
 	public ApiResponse<TokenResponseDTO.TokenDTO> login(@RequestBody @Valid MemberRequestDTO.LoginDTO dto,
 		HttpServletResponse response) {
-		return ApiResponse.onSuccess(memberQueryService.login(dto, response));
+		return ApiResponse.onSuccess(memberCommandService.login(dto, response));
 	}
 
 }
