@@ -48,4 +48,11 @@ public class Member extends BaseEntity {
     public void encodePassword(String password) {
         this.password = password;
     }
+
+    // 소셜 로그인 유저 추가정보 기입
+    public void updateRoleTempToUser(String name, String phoneNumber) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.role = Role.USER;
+    }
 }
