@@ -25,6 +25,7 @@ public enum ErrorStatus implements BaseErrorCode {
 	VENUE_NOT_FOUND(HttpStatus.NOT_FOUND, "VENUE404", "매장을 찾을 수 없습니다."),
 
 	// Member
+	MEMBER_ROLE_INVALID(HttpStatus.FORBIDDEN, "MEMBER403", "해당 API 이용 권한이 없습니다."),
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER404", "멤버를 찾을 수 없습니다."),
 	MEMBER_EXIST(HttpStatus.CONFLICT, "MEMBER409", "멤버가 이미 존재합니다."),
 

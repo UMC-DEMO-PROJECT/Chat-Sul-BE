@@ -14,16 +14,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CookieUtil {
 
-	private final JwtUtil jwtUtil;
 	private final String COOKIE_NAME = "refresh_token";
 
 	@Value("${Jwt.refresh-token.expiration-time}")
 	private long refreshTokenExpirationTime;
 
 	// 리프레쉬 토큰이 담긴 쿠키를 생성하는 메서드
-	public Cookie createCookie(String email) {
-		String cookieValue = jwtUtil.generateRefreshToken(email);
-		Cookie cookie = new Cookie(COOKIE_NAME, cookieValue);
+	public Cookie createCookie(String refreshToken) {
+		Cookie cookie = new Cookie(COOKIE_NAME, refreshToken);
 		cookie.setPath("/");
 		cookie.setHttpOnly(true); // 보안을 위해 httpOnly 설정
 		cookie.setSecure(false); // HTTPS 적용 후 true로 변경 필요
