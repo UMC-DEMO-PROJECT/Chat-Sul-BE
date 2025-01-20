@@ -21,7 +21,7 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 60)
     private String email;
 
     @Column(nullable = false)
@@ -39,7 +39,7 @@ public class Member extends BaseEntity {
     @Column(name = "provider", nullable = true, length = 10)
     private String provider;
 
-    @Column(name = "provider_id", nullable = true, length = 50)
+    @Column(name = "provider_id", nullable = true, length = 60)
     private String providerId;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
@@ -47,5 +47,12 @@ public class Member extends BaseEntity {
 
     public void encodePassword(String password) {
         this.password = password;
+    }
+
+    // 소셜 로그인 유저 추가정보 기입
+    public void updateRoleTempToUser(String name, String phoneNumber) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.role = Role.USER;
     }
 }

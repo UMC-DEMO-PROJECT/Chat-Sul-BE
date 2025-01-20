@@ -11,11 +11,14 @@ import org.springframework.stereotype.Component;
 import com.chatsul.apiPayload.code.status.ErrorStatus;
 import com.chatsul.apiPayload.exception.GeneralException;
 import com.chatsul.domain.Member;
+import com.chatsul.domain.RefreshToken;
 import com.chatsul.repository.MemberRepository;
+import com.chatsul.repository.RefreshTokenRepository;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,14 +30,17 @@ public class JwtUtil {
 	private SecretKey secretKey;
 	private long accessTokenExpirationTime;
 	private long refreshTokenExpirationTime;
+	private final RefreshTokenRepository refreshTokenRepository;
 
 	public JwtUtil(MemberRepository memberRepository, @Value("${Jwt.secret}") String secret,
 		@Value("${Jwt.access-token.expiration-time}") long accessExpiration,
-		@Value("${Jwt.refresh-token.expiration-time}") long refreshExpiration) {
+		@Value("${Jwt.refresh-token.expiration-time}") long refreshExpiration,
+		RefreshTokenRepository refreshTokenRepository) {
 		this.memberRepository = memberRepository;
 		this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 		this.accessTokenExpirationTime = accessExpiration; // Access 토큰 만료 시간 설정
 		this.refreshTokenExpirationTime = refreshExpiration; // Refresh 토큰 만료 시간 설정
+		this.refreshTokenRepository = refreshTokenRepository;
 	}
 
 	// 액세스 토큰을 발급하는 메서드
@@ -47,14 +53,21 @@ public class JwtUtil {
 			.compact();
 	}
 
+	@Transactional
 	// 리프레쉬 토큰을 발급하는 메서드
 	public String generateRefreshToken(String email) {
-		return Jwts.builder()
+		// 기존 리프레시 토큰 삭제
+		refreshTokenRepository.deleteByEmail(email);
+
+		// 새 리프레시 토큰 발급 후 저장
+		String refreshToken = Jwts.builder()
 			.claim("email", email)
 			.issuedAt(new Date())
 			.expiration(new Date(System.currentTimeMillis() + refreshTokenExpirationTime))
 			.signWith(secretKey)
 			.compact();
+		refreshTokenRepository.save(new RefreshToken(email, refreshToken));
+		return refreshToken;
 	}
 
 	// 응답 헤더에서 액세스 토큰을 반환하는 메서드
