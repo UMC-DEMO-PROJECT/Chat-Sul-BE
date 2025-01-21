@@ -10,6 +10,7 @@ import com.chatsul.domain.enums.Role;
 import com.chatsul.repository.MemberRepository;
 import com.chatsul.repository.ReservationRepository;
 import com.chatsul.repository.VenueRepository;
+import com.chatsul.web.dto.ReservationResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +45,23 @@ public class ReservationQueryServiceImpl implements ReservationQueryService {
                 (member, currentDate, pageRequest);
 
         return reservationPage;
+    }
+
+    @Override
+    public ReservationResponseDTO.AccountInfoDTO getReservationAccountInfo(Long reservationId, Member member) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.RESERVATION_NOT_FOUND));
+
+        if (!reservation.getStatus().equals(ReservationStatus.WAITING_DEPOSIT)) {
+            throw new GeneralException(ErrorStatus.INVALID_RESERVATION_STATUS);
+        }
+
+        if (!reservation.getMember().equals(member)) {
+            throw new GeneralException(ErrorStatus._FORBIDDEN);
+        }
+
+        Venue venue = reservation.getVenue();
+        return new ReservationResponseDTO.AccountInfoDTO(venue.getBank(), venue.getAccount());
     }
 
     // 사장님 예약 확인

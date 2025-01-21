@@ -1,5 +1,6 @@
 package com.chatsul.web.dto;
 
+import com.chatsul.domain.enums.Bank;
 import com.chatsul.domain.enums.ReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +25,15 @@ public class ReservationResponseDTO {
         String venueName;
         ReservationStatus status;
         LocalDateTime createdAt;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AccountInfoDTO {
+        private Bank bank;
+        private String account;
     }
 
     @Builder

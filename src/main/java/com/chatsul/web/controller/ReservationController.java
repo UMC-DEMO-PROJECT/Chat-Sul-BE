@@ -74,6 +74,15 @@ public class ReservationController {
         return ApiResponse.onSuccess("예약이 취소되었습니다.");
     }
 
+    @Operation(summary = "예약 계좌정보 확인 API",
+            description = "입금 대기 상태의 예약에 대해 계좌정보를 제공하는 API입니다.<br>")
+    @GetMapping("/{reservationId}/account-info")
+    public ApiResponse<ReservationResponseDTO.AccountInfoDTO> getReservationAccountInfo(
+            @PathVariable("reservationId") Long reservationId, @CurrentMember Member member) {
+        ReservationResponseDTO.AccountInfoDTO accountInfo = reservationQueryService.getReservationAccountInfo(reservationId, member);
+        return ApiResponse.onSuccess(accountInfo);
+    }
+
     // 사장님 로그인 구현 전까지는 venueId 받음
     @Operation(summary = "사장님 예약 확인 API",
             description = "사장님이 예약 내역을 확인하는 API 입니다.<br>"
