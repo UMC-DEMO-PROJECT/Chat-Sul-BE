@@ -55,4 +55,9 @@ public class Member extends BaseEntity {
         this.phoneNumber = phoneNumber;
         this.role = Role.USER;
     }
+
+    // 사장님 권한 부여
+    public void updateRoleToOwner() {
+        this.role = Role.OWNER;
+    }
 }
