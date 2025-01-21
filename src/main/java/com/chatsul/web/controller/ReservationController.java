@@ -26,7 +26,7 @@ public class ReservationController {
     private final ReservationQueryService reservationQueryService;
 
     @Operation(
-            summary = "예약 API",
+            summary = "사용자 예약 API",
             description = "예약(대관) API입니다.<br>",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "예약 요청 데이터",
@@ -57,7 +57,7 @@ public class ReservationController {
 
     @Operation(summary = "사용자 예약 확인 API",
             description = "사용자가 예약 내역(대관 내역)을 확인하는 API 입니다.<br>"
-                    + "WAITING_DEPOSIT: 입금 대기, WAITING_CONFIRMATION: 확정 대기, CONFIRMED: 확정, CANCELLED: 취소")
+                    + "status -> WAITING_DEPOSIT: 입금 대기, WAITING_CONFIRMATION: 확정 대기, CONFIRMED: 확정, CANCELLED: 취소")
     @GetMapping("/list")
     public ApiResponse<ReservationResponseDTO.ReservationPreViewListDTO> getReservationList(
             @CurrentMember Member member, @RequestParam("page") Integer page) {
@@ -80,35 +80,36 @@ public class ReservationController {
                     + "ALL: 모두, CONFIRMED: 확정, WAITING_DEPOSIT: 입금 대기, WAITING_CONFIRMATION: 확정 대기")
     @GetMapping("/business/list/{venueId}")
     public ApiResponse<ReservationResponseDTO.BusinessReservationPreViewListDTO> getBusinessReservationList(
-            @PathVariable("venueId") Long venueId, @RequestParam("status") String status, @RequestParam("page") Integer page) {
-        Page<Reservation> reservationList = reservationQueryService.getBusinessReservationList(venueId, status, page);
+            @PathVariable("venueId") Long venueId, @RequestParam("status") String status, @RequestParam("page") Integer page
+    , @CurrentMember Member member) {
+        Page<Reservation> reservationList = reservationQueryService.getBusinessReservationList(venueId, status, page, member);
         return ApiResponse.onSuccess(ReservationConverter.businessReservationPreViewListDTO(reservationList));
     }
 
-    @Operation(summary = "예약 수락 API",
+    @Operation(summary = "사장님 예약 수락 API",
             description = "사장님이 예약을 수락하는 API 입니다.<br>")
     @PatchMapping("/business/{venueId}/accept/{reservationId}")
     public ApiResponse<String> acceptReservation(
-            @PathVariable("venueId") Long venueId, @PathVariable("reservationId") Long reservationId) {
-        reservationCommandService.acceptReservation(reservationId, venueId);
+            @PathVariable("venueId") Long venueId, @PathVariable("reservationId") Long reservationId, @CurrentMember Member member) {
+        reservationCommandService.acceptReservation(reservationId, venueId, member);
         return ApiResponse.onSuccess("예약이 수락되었습니다.");
     }
 
-    @Operation(summary = "예약 거절 API",
+    @Operation(summary = "사장님 예약 거절 API",
             description = "사장님이 예약을 거절하는 API 입니다.<br>")
     @PatchMapping("/business/{venueId}/reject/{reservationId}")
     public ApiResponse<String> rejectReservation(
-            @PathVariable("venueId") Long venueId, @PathVariable("reservationId") Long reservationId) {
-        reservationCommandService.rejectReservation(reservationId, venueId);
+            @PathVariable("venueId") Long venueId, @PathVariable("reservationId") Long reservationId, @CurrentMember Member member) {
+        reservationCommandService.rejectReservation(reservationId, venueId, member);
         return ApiResponse.onSuccess("예약이 거절되었습니다.");
     }
 
-    @Operation(summary = "예약 확정 API",
+    @Operation(summary = "사장님 예약 확정 API",
             description = "사장님이 예약을 확정하는 API 입니다.<br>")
     @PatchMapping("/business/{venueId}/confirm/{reservationId}")
     public ApiResponse<String> confirmReservation(
-            @PathVariable("venueId") Long venueId, @PathVariable("reservationId") Long reservationId) {
-        reservationCommandService.confirmReservation(reservationId, venueId);
+            @PathVariable("venueId") Long venueId, @PathVariable("reservationId") Long reservationId, @CurrentMember Member member) {
+        reservationCommandService.confirmReservation(reservationId, venueId, member);
         return ApiResponse.onSuccess("예약이 확정되었습니다.");
     }
 }

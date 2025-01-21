@@ -4,9 +4,12 @@ import com.chatsul.apiPayload.code.status.ErrorStatus;
 import com.chatsul.apiPayload.exception.GeneralException;
 import com.chatsul.domain.Member;
 import com.chatsul.domain.Reservation;
+import com.chatsul.domain.Venue;
 import com.chatsul.domain.enums.ReservationStatus;
+import com.chatsul.domain.enums.Role;
 import com.chatsul.repository.MemberRepository;
 import com.chatsul.repository.ReservationRepository;
+import com.chatsul.repository.VenueRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +27,9 @@ import java.util.List;
 public class ReservationQueryServiceImpl implements ReservationQueryService {
 
     private final ReservationRepository reservationRepository;
+    private final VenueRepository venueRepository;
 
+    // 사용자 예약 확인
     @Override
     public Page<Reservation> getReservationList(Member member, Integer page) {
         if (member == null || member.getId() == null) {
@@ -41,8 +46,14 @@ public class ReservationQueryServiceImpl implements ReservationQueryService {
         return reservationPage;
     }
 
+    // 사장님 예약 확인
     @Override
-    public Page<Reservation> getBusinessReservationList(Long venueId, String status, Integer page) {
+    public Page<Reservation> getBusinessReservationList(Long venueId, String status, Integer page, Member member) {
+
+        Venue venue = venueRepository.findById(venueId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.VENUE_NOT_FOUND));
+
+        validateOwner(member, venue);
 
         LocalDate currentDate = LocalDate.now();
 
@@ -76,5 +87,15 @@ public class ReservationQueryServiceImpl implements ReservationQueryService {
     private Page<Reservation> getReservationsByStatus(Long venueId, ReservationStatus status, LocalDate currentDate, PageRequest pageRequest) {
         return reservationRepository.findByVenueIdAndStatusAndReservationDateAfter(
                 venueId, status, currentDate, pageRequest);
+    }
+
+    private void validateOwner(Member member, Venue venue) {
+        if (!member.getRole().equals(Role.OWNER)) {
+            throw new GeneralException(ErrorStatus.MEMBER_ROLE_INVALID);
+        }
+
+        if (!venue.getMember().equals(member)) {
+            throw new GeneralException(ErrorStatus.VENUE_MEMBER_MISMATCH);
+        }
     }
 }

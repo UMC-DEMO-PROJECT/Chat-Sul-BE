@@ -7,6 +7,7 @@ import com.chatsul.domain.Member;
 import com.chatsul.domain.Reservation;
 import com.chatsul.domain.Venue;
 import com.chatsul.domain.enums.ReservationStatus;
+import com.chatsul.domain.enums.Role;
 import com.chatsul.repository.MemberRepository;
 import com.chatsul.repository.ReservationRepository;
 import com.chatsul.repository.VenueRepository;
@@ -25,6 +26,7 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
     private final ReservationRepository reservationRepository;
     private final VenueRepository venueRepository;
 
+    // 유저
     @Override
     public Reservation createReservation(ReservationRequestDTO.MakeReservationRequestDTO request, Long venueId, Member member) {
 
@@ -58,42 +60,56 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
         reservation.setStatus(ReservationStatus.CANCELLED);
     }
 
+    // 사장님
     @Override
-    public void acceptReservation(Long reservationId, Long venueId) {
+    public void acceptReservation(Long reservationId, Long venueId, Member member) {
+        handleReservationUpdate(reservationId, venueId, member, ReservationStatus.WAITING_DEPOSIT, ReservationStatus.WAITING_CONFIRMATION);
+    }
 
-        Reservation reservation = reservationRepository.findById(reservationId)
+    @Override
+    public void rejectReservation(Long reservationId, Long venueId, Member member) {
+        handleReservationUpdate(reservationId, venueId, member, ReservationStatus.WAITING_DEPOSIT, ReservationStatus.CANCELLED);
+    }
+
+    @Override
+    public void confirmReservation(Long reservationId, Long venueId, Member member) {
+        handleReservationUpdate(reservationId, venueId, member, ReservationStatus.WAITING_CONFIRMATION, ReservationStatus.CONFIRMED);
+    }
+
+    // 예약 업데이트
+    private void handleReservationUpdate(Long reservationId, Long venueId, Member member, ReservationStatus expectedStatus, ReservationStatus updatedStatus) {
+        Venue venue = getVenueById(venueId);
+        validateOwner(member, venue);
+
+        Reservation reservation = getReservationById(reservationId);
+        validateReservationStatus(reservation, expectedStatus);
+
+        reservation.setStatus(updatedStatus);
+    }
+
+    private Venue getVenueById(Long venueId) {
+        return venueRepository.findById(venueId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.VENUE_NOT_FOUND));
+    }
+
+    private Reservation getReservationById(Long reservationId) {
+        return reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.RESERVATION_NOT_FOUND));
+    }
 
-        if (!reservation.getStatus().equals(ReservationStatus.WAITING_DEPOSIT)) {
+    // 사장 확인
+    private void validateOwner(Member member, Venue venue) {
+        if (!member.getRole().equals(Role.OWNER)) {
+            throw new GeneralException(ErrorStatus.MEMBER_ROLE_INVALID);
+        }
+        if (!venue.getMember().equals(member)) {
+            throw new GeneralException(ErrorStatus.VENUE_MEMBER_MISMATCH);
+        }
+    }
+
+    private void validateReservationStatus(Reservation reservation, ReservationStatus expectedStatus) {
+        if (!reservation.getStatus().equals(expectedStatus)) {
             throw new GeneralException(ErrorStatus.INVALID_RESERVATION_STATUS);
         }
-
-        reservation.setStatus(ReservationStatus.WAITING_CONFIRMATION);
-    }
-
-    @Override
-    public void rejectReservation(Long reservationId, Long venueId) {
-
-            Reservation reservation = reservationRepository.findById(reservationId)
-                    .orElseThrow(() -> new GeneralException(ErrorStatus.RESERVATION_NOT_FOUND));
-
-            if (!reservation.getStatus().equals(ReservationStatus.WAITING_DEPOSIT)) {
-                throw new GeneralException(ErrorStatus.INVALID_RESERVATION_STATUS);
-            }
-
-            reservation.setStatus(ReservationStatus.CANCELLED);
-    }
-
-    @Override
-    public void confirmReservation(Long reservationId, Long venueId) {
-
-            Reservation reservation = reservationRepository.findById(reservationId)
-                    .orElseThrow(() -> new GeneralException(ErrorStatus.RESERVATION_NOT_FOUND));
-
-            if (!reservation.getStatus().equals(ReservationStatus.WAITING_CONFIRMATION)) {
-                throw new GeneralException(ErrorStatus.INVALID_RESERVATION_STATUS);
-            }
-
-            reservation.setStatus(ReservationStatus.CONFIRMED);
     }
 }
