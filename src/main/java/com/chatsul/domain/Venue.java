@@ -40,6 +40,10 @@ public class Venue extends BaseEntity {
 	@Column(nullable = false, length = 100)
 	private String address;
 
+	// 상세 주소
+	@Column(nullable = false, length = 100)
+	private String detailAddress;
+
 	// 가게 전화번호
 	@Column(nullable = false, length = 50)
 	private String phone;

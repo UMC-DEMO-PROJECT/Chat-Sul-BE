@@ -30,6 +30,7 @@ public class VenueCommandServiceImpl implements VenueCommandService {
 		Venue venue = Venue.builder()
 			.name(request.getName())
 			.address(request.getAddress())
+			.detailAddress(request.getDetailAddress())
 			.phone(request.getPhone())
 			.latitude(latitude)
 			.longitude(longitude)
