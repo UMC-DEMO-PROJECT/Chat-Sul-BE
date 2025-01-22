@@ -9,9 +9,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +25,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class LostItem extends BaseEntity {
 
 	@Id
@@ -35,9 +40,17 @@ public class LostItem extends BaseEntity {
 
 	private String itemImg;
 
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private Member member;
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "lost_item_status", nullable = false)
 	private LostItemStatus lostItemStatus = LostItemStatus.Lost;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "venue_id")
+	private Venue venue;
 
 	public void updateStatus() {
 		this.lostItemStatus = lostItemStatus.Found;
@@ -45,35 +58,16 @@ public class LostItem extends BaseEntity {
 
 	@Builder
 	public LostItem(String title, LocalDate foundDate,
-		String description, String itemImg) {
+		String description, String itemImg, LostItemStatus lostItemStatus, Venue venue) {
 		this.title = title;
 		this.foundDate = foundDate;
 		this.description = description;
 		this.itemImg = itemImg;
-	}
-	
-	public Long getLostItemId() {
-		return lostItemId;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public LocalDate getFoundDate() {
-		return foundDate;
-	}
-
-	public String getItemImg() {
-		return itemImg;
+		this.lostItemStatus = lostItemStatus;
+		this.venue = venue;
 	}
 
 	public LostItemStatus getlostItemStatus() {
 		return lostItemStatus;
 	}
-
 }
