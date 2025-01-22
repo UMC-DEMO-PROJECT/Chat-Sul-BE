@@ -2,11 +2,11 @@ package com.chatsul.apiPayload.code.status;
 
 import org.springframework.http.HttpStatus;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import com.chatsul.apiPayload.code.BaseErrorCode;
 import com.chatsul.apiPayload.code.ErrorReasonDTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
@@ -24,6 +24,9 @@ public enum ErrorStatus implements BaseErrorCode {
 	// Venue
 	VENUE_NOT_FOUND(HttpStatus.NOT_FOUND, "VENUE404", "매장을 찾을 수 없습니다."),
 
+	// Menu
+	MENU_NOT_FOUND(HttpStatus.NOT_FOUND, "MENU404", "메뉴를 찾을 수 없습니다."),
+
 	// Member
 	MEMBER_ROLE_INVALID(HttpStatus.FORBIDDEN, "MEMBER403", "해당 API 이용 권한이 없습니다."),
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER404", "멤버를 찾을 수 없습니다."),
@@ -38,8 +41,8 @@ public enum ErrorStatus implements BaseErrorCode {
 	EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN405", "토큰이 만료되었습니다."),
 
 	// OAuth
-	OAUTH_TOKEN_FAIL(HttpStatus.BAD_REQUEST,"OAUTH400","토큰 변경 실패"),
-	OAUTH_USER_INFO_FAIL(HttpStatus.NOT_FOUND, "OAUTH401","사용자 정보를 가져오지 못했습니다"),
+	OAUTH_TOKEN_FAIL(HttpStatus.BAD_REQUEST, "OAUTH400", "토큰 변경 실패"),
+	OAUTH_USER_INFO_FAIL(HttpStatus.NOT_FOUND, "OAUTH401", "사용자 정보를 가져오지 못했습니다"),
 	INVALID_PROVIDER(HttpStatus.BAD_REQUEST, "OAUTH402", "올바르지 않은 플랫폼입니다."),
 
 	// For test

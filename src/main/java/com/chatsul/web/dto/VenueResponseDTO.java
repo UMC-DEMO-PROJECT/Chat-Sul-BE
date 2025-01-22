@@ -23,11 +23,11 @@ public class VenueResponseDTO {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class VenueInfoDTO {
+		Long venueId;
 		String name;
 		String address;
+		String detailAddress;
 		String phone;
-		String account;
-		String bank;
 	}
 
 	// 지도 위치 표시할 때 반환
@@ -43,8 +43,27 @@ public class VenueResponseDTO {
 		@NoArgsConstructor
 		@AllArgsConstructor
 		public static class MapLocationDTO {
+			Long venueId;
 			Double latitude;
 			Double longitude;
+		}
+	}
+
+	// 메뉴 이미지 반환
+	@Builder
+	@Getter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class MenuImageListDTO {
+		private List<MenuImageDTO> menuImageList;
+
+		@Builder
+		@Getter
+		@NoArgsConstructor
+		@AllArgsConstructor
+		public static class MenuImageDTO {
+			Long menuId;
+			String imageUrl;
 		}
 	}
 }
