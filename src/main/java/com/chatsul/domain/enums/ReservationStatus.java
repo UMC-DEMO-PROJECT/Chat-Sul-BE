@@ -1,7 +1,15 @@
 package com.chatsul.domain.enums;
 
-public enum ReservationStatus {
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-    // 입금 대기, 확정 대기, 확정, 취소
-    WAITING_DEPOSIT, WAITING_CONFIRMATION, CONFIRMED, CANCELLED
+@Getter
+@RequiredArgsConstructor
+public enum ReservationStatus {
+    WAITING_DEPOSIT("입금 대기"),
+    WAITING_CONFIRMATION("확정 대기"),
+    CONFIRMED("확정"),
+    CANCELLED("취소");
+
+    private final String status;
 }

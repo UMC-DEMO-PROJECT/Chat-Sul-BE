@@ -38,6 +38,8 @@ public class VenueCommandServiceImpl implements VenueCommandService {
 			.member(member)
 			.build();
 
+		member.updateRoleToOwner();
+
 		return venueRepository.save(venue);
 	}
 }

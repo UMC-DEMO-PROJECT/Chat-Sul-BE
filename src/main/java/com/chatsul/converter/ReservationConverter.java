@@ -63,4 +63,30 @@ public class ReservationConverter {
                 .isLast(reservationList.isLast())
                 .build();
     }
+
+    public static ReservationResponseDTO.BusinessReservationPreViewDTO BusinessReservationPreViewDTO(Reservation reservation) {
+        return ReservationResponseDTO.BusinessReservationPreViewDTO.builder()
+                .reservationId(reservation.getReservationId())
+                .reservationName(reservation.getReservationName())
+                .reservationDate(reservation.getReservationDate())
+                .reservationTime(reservation.getReservationTime())
+                .numberOfGuests(reservation.getNumberOfGuests())
+                .status(reservation.getStatus())
+                .build();
+    }
+
+    public static ReservationResponseDTO.BusinessReservationPreViewListDTO businessReservationPreViewListDTO(Page<Reservation> reservationList) {
+        List<ReservationResponseDTO.BusinessReservationPreViewDTO> businessReservationPreViewDTOList = reservationList.stream()
+                .map(ReservationConverter::BusinessReservationPreViewDTO)
+                .collect(Collectors.toList());
+
+        return ReservationResponseDTO.BusinessReservationPreViewListDTO.builder()
+                .reservationList(businessReservationPreViewDTOList)
+                .listSize(businessReservationPreViewDTOList.size())
+                .totalPage(reservationList.getTotalPages())
+                .totalElements(reservationList.getTotalElements())
+                .isFirst(reservationList.isFirst())
+                .isLast(reservationList.isLast())
+                .build();
+    }
 }
