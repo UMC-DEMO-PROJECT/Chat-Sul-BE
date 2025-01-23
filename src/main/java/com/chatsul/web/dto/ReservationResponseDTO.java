@@ -31,6 +31,14 @@ public class ReservationResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class PhoneInfoDTO {
+        private String phone;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class AccountInfoDTO {
         private Bank bank;
         private String account;

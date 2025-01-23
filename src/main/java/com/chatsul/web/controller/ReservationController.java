@@ -2,6 +2,7 @@ package com.chatsul.web.controller;
 
 import com.chatsul.annotation.CurrentMember;
 import com.chatsul.apiPayload.ApiResponse;
+import com.chatsul.apiPayload.code.status.ErrorStatus;
 import com.chatsul.converter.ReservationConverter;
 import com.chatsul.domain.Member;
 import com.chatsul.domain.Reservation;
@@ -67,10 +68,21 @@ public class ReservationController {
 
     @Operation(summary = "사용자 예약 취소 API",
             description = "사용자가 예약을 취소하는 API 입니다.<br>")
-    @DeleteMapping("/cancel/{reservationId}")
-    public ApiResponse<String> cancelReservation(
+    @PatchMapping("/cancel/{reservationId}")
+    public ApiResponse<?> cancelReservation(
             @PathVariable("reservationId") Long reservationId, @CurrentMember Member member) {
-        reservationCommandService.cancelReservation(reservationId, member);
+        ReservationResponseDTO.PhoneInfoDTO cancelInfo = reservationCommandService.cancelReservation(reservationId, member);
+
+        if (cancelInfo != null) {
+            // 2일 이전이라 취소할 수 없는 경우 매장 전화번호 반환
+            return ApiResponse.onFailure(
+                    ErrorStatus.CANCEL_RESERVATION_BEFORE_2DAYS.getCode(),
+                    ErrorStatus.CANCEL_RESERVATION_BEFORE_2DAYS.getMessage(),
+                    cancelInfo
+            );
+        }
+
+        // 취소 성공 메시지 반환
         return ApiResponse.onSuccess("예약이 취소되었습니다.");
     }
 
@@ -83,7 +95,6 @@ public class ReservationController {
         return ApiResponse.onSuccess(accountInfo);
     }
 
-    // 사장님 로그인 구현 전까지는 venueId 받음
     @Operation(summary = "사장님 예약 확인 API",
             description = "사장님이 예약 내역을 확인하는 API 입니다.<br>"
                     + "ALL: 모두, CONFIRMED: 확정, WAITING_DEPOSIT: 입금 대기, WAITING_CONFIRMATION: 확정 대기")

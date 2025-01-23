@@ -12,6 +12,7 @@ import com.chatsul.repository.MemberRepository;
 import com.chatsul.repository.ReservationRepository;
 import com.chatsul.repository.VenueRepository;
 import com.chatsul.web.dto.ReservationRequestDTO;
+import com.chatsul.web.dto.ReservationResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +44,7 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
     }
 
     @Override
-    public void cancelReservation(Long reservationId, Member member) {
+    public ReservationResponseDTO.PhoneInfoDTO cancelReservation(Long reservationId, Member member) {
 
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.RESERVATION_NOT_FOUND));
@@ -54,10 +55,15 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
 
         LocalDate currentDate = LocalDate.now();
         if (reservation.getReservationDate().isBefore(currentDate.plusDays(2))) {
-            throw new GeneralException(ErrorStatus.CANCEL_RESERVATION_BEFORE_2DAYS);
+            Venue venue = reservation.getVenue();
+            return ReservationResponseDTO.PhoneInfoDTO.builder()
+                    .phone(venue.getPhone())
+                    .build();
+            // 취소 실패 시 전화번호 반환
         }
 
         reservation.setStatus(ReservationStatus.CANCELLED);
+        return null; // 취소가 성공한 경우 null 반환
     }
 
     // 사장님
