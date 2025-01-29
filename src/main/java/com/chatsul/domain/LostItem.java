@@ -22,7 +22,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class LostItem extends BaseEntity {
@@ -39,29 +38,19 @@ public class LostItem extends BaseEntity {
 
 	private String itemImg;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private Member member;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "lost_item_status", nullable = false)
-	private LostItemStatus lostItemStatus = LostItemStatus.Lost;
+	private LostItemStatus lostItemStatus;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "venue_id")
 	private Venue venue;
 
-	public LostItem(String title, LocalDate foundDate,
-		String description, String itemImg, LostItemStatus lostItemStatus, Venue venue) {
-		this.title = title;
-		this.foundDate = foundDate;
-		this.description = description;
-		this.itemImg = itemImg;
-		this.lostItemStatus = lostItemStatus;
-		this.venue = venue;
-	}
-
 	public void updateStatus() {
-		this.lostItemStatus = lostItemStatus.Found;
+		this.lostItemStatus = LostItemStatus.Found;
 	}
 }
