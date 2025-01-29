@@ -31,7 +31,7 @@ public class MenuController {
 	@Operation(summary = "매장 메뉴 등록 API",
 		description = "매장 메뉴를 등록하는 API입니다.<br>"
 			+ "메뉴 이미지는 여러 장일 수 있습니다.")
-	@PostMapping(value = "/menu/add/{venueId}", consumes = "multipart/form-data")
+	@PostMapping(value = "/add/{venueId}", consumes = "multipart/form-data")
 	public ApiResponse<List<MenuResponseDTO.CreateMenuDTO>> createMenu(@ModelAttribute MenuRequestDTO request,
 		@PathVariable("venueId") Long venueId) {
 		List<Menu> menuList = menuCommandService.createMenu(request, venueId);
@@ -41,7 +41,7 @@ public class MenuController {
 	@Operation(summary = "메뉴 이미지 반환 API",
 		description = "매장 메뉴 이미지를 반환하는 API입니다.<br>"
 			+ "메뉴 이미지는 여러 장일 수 있습니다.")
-	@GetMapping("/menu/{venueId}")
+	@GetMapping("/{venueId}")
 	public ApiResponse<MenuResponseDTO.MenuImageListDTO> getMenuImageList(@PathVariable("venueId") Long venueId) {
 		MenuResponseDTO.MenuImageListDTO imageList = menuQueryService.getMenuImageList(venueId);
 		return ApiResponse.onSuccess(imageList);
