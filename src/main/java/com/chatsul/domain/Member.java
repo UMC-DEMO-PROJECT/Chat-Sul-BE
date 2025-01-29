@@ -45,6 +45,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Reservation> reservationList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<LostItem> lostItemList = new ArrayList<>();
+
     public void encodePassword(String password) {
         this.password = password;
     }

@@ -39,11 +39,10 @@ public class LostItem extends BaseEntity {
 	private String itemImg;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "member_id")
 	private Member member;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "lost_item_status", nullable = false)
 	private LostItemStatus lostItemStatus;
 
 	@ManyToOne(fetch = FetchType.LAZY)
