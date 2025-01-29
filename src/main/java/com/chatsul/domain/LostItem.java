@@ -16,7 +16,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -52,11 +51,6 @@ public class LostItem extends BaseEntity {
 	@JoinColumn(name = "venue_id")
 	private Venue venue;
 
-	public void updateStatus() {
-		this.lostItemStatus = lostItemStatus.Found;
-	}
-
-	@Builder
 	public LostItem(String title, LocalDate foundDate,
 		String description, String itemImg, LostItemStatus lostItemStatus, Venue venue) {
 		this.title = title;
@@ -67,7 +61,7 @@ public class LostItem extends BaseEntity {
 		this.venue = venue;
 	}
 
-	public LostItemStatus getlostItemStatus() {
-		return lostItemStatus;
+	public void updateStatus() {
+		this.lostItemStatus = lostItemStatus.Found;
 	}
 }
