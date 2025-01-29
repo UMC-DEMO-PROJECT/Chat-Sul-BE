@@ -3,15 +3,39 @@ package com.chatsul.converter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.chatsul.domain.Menu;
+import com.chatsul.domain.Member;
 import com.chatsul.domain.Venue;
+import com.chatsul.web.dto.VenueRequestDTO;
 import com.chatsul.web.dto.VenueResponseDTO;
 
 public class VenueConverter {
 
-	public static VenueResponseDTO.CreateVenueDTO toCreateVenueDTO(Venue venue) {
+	public static Venue toCreateVenueDTO(VenueRequestDTO request, Member member, Double latitude, Double longitude) {
+		return Venue.builder()
+			.name(request.getName())
+			.address(request.getAddress())
+			.detailAddress(request.getDetailAddress())
+			.phone(request.getPhone())
+			.bank(request.getBank())
+			.account(request.getAccount())
+			.latitude(latitude)
+			.longitude(longitude)
+			.member(member)
+			.build();
+	}
+
+	public static VenueResponseDTO.CreateVenueDTO VenueResultDTO(Venue venue) {
 		return VenueResponseDTO.CreateVenueDTO.builder()
 			.venueId(venue.getId())
+			.name(venue.getName())
+			.address(venue.getAddress())
+			.detailAddress(venue.getDetailAddress())
+			.phone(venue.getPhone())
+			.bank(venue.getBank().getBankName())
+			.account(venue.getAccount())
+			.latitude(venue.getLatitude())
+			.longitude(venue.getLongitude())
+			.member(venue.getMember())
 			.build();
 	}
 
@@ -36,19 +60,6 @@ public class VenueConverter {
 
 		return VenueResponseDTO.LocationListDTO.builder()
 			.locationList(mapLocationDTOList)
-			.build();
-	}
-
-	public static VenueResponseDTO.MenuImageListDTO menuImageListDTO(List<Menu> menuImageList) {
-		List<VenueResponseDTO.MenuImageListDTO.MenuImageDTO> menuImageDTOList = menuImageList.stream()
-			.map(menuImage -> VenueResponseDTO.MenuImageListDTO.MenuImageDTO.builder()
-				.menuId(menuImage.getId())
-				.imageUrl(menuImage.getImageUrl())
-				.build())
-			.collect(Collectors.toList());
-
-		return VenueResponseDTO.MenuImageListDTO.builder()
-			.menuImageList(menuImageDTOList)
 			.build();
 	}
 }

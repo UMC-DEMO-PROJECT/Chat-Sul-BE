@@ -13,7 +13,6 @@ import com.chatsul.annotation.CurrentMember;
 import com.chatsul.apiPayload.ApiResponse;
 import com.chatsul.converter.VenueConverter;
 import com.chatsul.domain.Member;
-import com.chatsul.domain.Menu;
 import com.chatsul.domain.Venue;
 import com.chatsul.service.VenueService.VenueCommandService;
 import com.chatsul.service.VenueService.VenueQueryService;
@@ -39,7 +38,7 @@ public class VenueController {
 	public ApiResponse<VenueResponseDTO.CreateVenueDTO> createVenue(@CurrentMember Member member,
 		@RequestBody VenueRequestDTO request) {
 		Venue venue = venueCommandService.createVenue(member, request);
-		return ApiResponse.onSuccess(VenueConverter.toCreateVenueDTO(venue));
+		return ApiResponse.onSuccess(VenueConverter.VenueResultDTO(venue));
 	}
 
 	@Operation(summary = "위도, 경도 반환 API",
@@ -57,14 +56,5 @@ public class VenueController {
 	public ApiResponse<VenueResponseDTO.VenueInfoDTO> getVenueInfo(@PathVariable("venueId") Long venueId) {
 		Venue venue = venueQueryService.getVenueInfo(venueId);
 		return ApiResponse.onSuccess(VenueConverter.VenueInfoDTO(venue));
-	}
-
-	@Operation(summary = "메뉴 이미지 반환 API",
-		description = "매장 메뉴 이미지를 반환하는 API입니다.<br>"
-			+ "메뉴 이미지는 여러 장일 수 있습니다.")
-	@GetMapping("/menu/{venueId}")
-	public ApiResponse<VenueResponseDTO.MenuImageListDTO> getMenuImageList(@PathVariable("venueId") Long venueId) {
-		List<Menu> menuImageList = venueQueryService.getMenuImageList(venueId);
-		return ApiResponse.onSuccess(VenueConverter.menuImageListDTO(menuImageList));
 	}
 }

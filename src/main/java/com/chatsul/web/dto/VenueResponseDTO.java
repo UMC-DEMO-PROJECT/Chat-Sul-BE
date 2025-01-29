@@ -2,6 +2,8 @@ package com.chatsul.web.dto;
 
 import java.util.List;
 
+import com.chatsul.domain.Member;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +17,15 @@ public class VenueResponseDTO {
 	@AllArgsConstructor
 	public static class CreateVenueDTO {
 		Long venueId;
+		String name;
+		String address;
+		String detailAddress;
+		String phone;
+		String bank;
+		String account;
+		Double latitude;
+		Double longitude;
+		Member member;
 	}
 
 	// 매장 클릭 시 반환
@@ -46,24 +57,6 @@ public class VenueResponseDTO {
 			Long venueId;
 			Double latitude;
 			Double longitude;
-		}
-	}
-
-	// 메뉴 이미지 반환
-	@Builder
-	@Getter
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class MenuImageListDTO {
-		private List<MenuImageDTO> menuImageList;
-
-		@Builder
-		@Getter
-		@NoArgsConstructor
-		@AllArgsConstructor
-		public static class MenuImageDTO {
-			Long menuId;
-			String imageUrl;
 		}
 	}
 }
