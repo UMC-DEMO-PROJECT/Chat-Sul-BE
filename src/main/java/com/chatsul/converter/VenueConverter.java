@@ -31,7 +31,7 @@ public class VenueConverter {
 			.address(venue.getAddress())
 			.detailAddress(venue.getDetailAddress())
 			.phone(venue.getPhone())
-			.bank(venue.getBank().getBankName())
+			.bank(venue.getBank())
 			.account(venue.getAccount())
 			.latitude(venue.getLatitude())
 			.longitude(venue.getLongitude())

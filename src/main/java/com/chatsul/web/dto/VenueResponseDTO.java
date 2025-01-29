@@ -3,6 +3,7 @@ package com.chatsul.web.dto;
 import java.util.List;
 
 import com.chatsul.domain.Member;
+import com.chatsul.domain.enums.Bank;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +22,7 @@ public class VenueResponseDTO {
 		String address;
 		String detailAddress;
 		String phone;
-		String bank;
+		Bank bank;
 		String account;
 		Double latitude;
 		Double longitude;
