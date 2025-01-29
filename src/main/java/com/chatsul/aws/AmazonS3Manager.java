@@ -24,13 +24,25 @@ public class AmazonS3Manager {
 	private final AmazonConfig amazonConfig;
 	private final UuidRepository uuidRepository;
 
-	public String uploadFile(String KeyName, MultipartFile file) throws IOException {
-		System.out.println(KeyName);
+	public String uploadFile(String keyName, MultipartFile file) {
+		System.out.println(keyName);
 		ObjectMetadata metadata = new ObjectMetadata();
 		metadata.setContentLength(file.getSize());
-		amazonS3.putObject(new PutObjectRequest(amazonConfig.getBucket(), KeyName, file.getInputStream(), metadata));
+		metadata.setContentDisposition("inline");
 
-		return amazonS3.getUrl(amazonConfig.getBucket(), KeyName).toString();
+		// 업로드된 파일의 Content-Type을 가져와서 설정
+		String contentType = file.getContentType();
+		if (contentType != null && contentType.startsWith("image")) {
+			metadata.setContentType(contentType);  // 이미지 파일이라면 해당 contentType을 설정
+		}
+		
+		try {
+			amazonS3.putObject(
+				new PutObjectRequest(amazonConfig.getBucket(), keyName, file.getInputStream(), metadata));
+		} catch (IOException e) {
+			log.error("error at AmazonS3Manager uploadFile : {}", (Object)e.getStackTrace());
+		}
+		return amazonS3.getUrl(amazonConfig.getBucket(), keyName).toString();
 	}
 
 	public String generateMenuKeyName(Uuid uuid) {
