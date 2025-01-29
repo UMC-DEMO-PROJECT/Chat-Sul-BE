@@ -1,15 +1,27 @@
 spring:
   datasource:
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    url: ${DB_URL}
+    url: ${RDS_URL}
+    username: ${RDS_USER}
+    password: ${RDS_PW}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: never
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
         format_sql: true
+        use_sql_comments: true
+        default_batch_fetch_size: 1000
+
+
+kakao:
+  api-key: ${KAKAO_API_KEY}
+
 
 springdoc:
   swagger-ui:
