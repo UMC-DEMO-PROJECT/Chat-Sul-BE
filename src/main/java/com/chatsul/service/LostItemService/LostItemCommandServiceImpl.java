@@ -1,4 +1,4 @@
-package com.chatsul.service;
+package com.chatsul.service.LostItemService;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

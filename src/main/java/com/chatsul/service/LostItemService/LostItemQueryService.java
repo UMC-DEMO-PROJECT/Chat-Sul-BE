@@ -1,4 +1,4 @@
-package com.chatsul.service;
+package com.chatsul.service.LostItemService;
 
 import com.chatsul.web.dto.LostItemResponseDTO;
 import org.springframework.data.domain.Pageable;
