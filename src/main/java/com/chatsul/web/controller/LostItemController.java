@@ -97,14 +97,11 @@ public class LostItemController {
 //		return ResponseEntity.ok(response);
 //	}
 
-//	@Operation(summary = "사장님용 수취상태 변경 API", description = "상태를 변경할 분실물의 id를 입력하세요")
-//	@PatchMapping("/business/{lostItemId}/status") //분실물 상태 변경
-//	public ResponseEntity<String> updateLostItemStatus(@PathVariable(name = "lostItemId") Long lostItemId) {
-//		try {
-//			String response = lostItemService.updateLostItemStatus(lostItemId);
-//			return ResponseEntity.ok(response);
-//		} catch (Exception e) {
-//			return ResponseEntity.badRequest().body("상태 변경에 실패했습니다.");
-//		}
-//	}
+	@Operation(summary = "사장님용 수취상태 변경 API", description = "상태를 변경할 분실물의 id를 입력하세요")
+	@PatchMapping("/business/{venueId}/status/{lostItemId}")
+	public ApiResponse<String> updateLostItemStatus(
+			@PathVariable("venueId") Long venueId, @PathVariable("lostItemId") Long lostItemId, @CurrentMember Member member) {
+		lostItemCommandService.updateLostItemStatus(lostItemId, venueId, member);
+		return ApiResponse.onSuccess("분실물 수취 상태가 변경되었습니다.");
+	}
 }

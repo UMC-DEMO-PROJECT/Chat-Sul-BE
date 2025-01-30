@@ -9,5 +9,5 @@ public interface LostItemCommandService {
 
 //    void deleteLostItem(LostItemRequestDTO lostItemRequestDTO);
 //
-//    String updateLostItemStatus(Long lostItemId);
+    void updateLostItemStatus(Long lostItemId, Long venueId, Member member);
 }

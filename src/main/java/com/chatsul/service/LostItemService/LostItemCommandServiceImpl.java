@@ -3,6 +3,7 @@ package com.chatsul.service.LostItemService;
 import com.chatsul.apiPayload.code.status.ErrorStatus;
 import com.chatsul.apiPayload.exception.GeneralException;
 import com.chatsul.domain.Member;
+import com.chatsul.domain.enums.LostItemStatus;
 import com.chatsul.domain.enums.Role;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,14 +49,18 @@ public class LostItemCommandServiceImpl implements LostItemCommandService {
 //		lostItemRepository.deleteByLostItemId(requestDTO.getLostItemId());
 //	}
 //
-//	@Override
-//	public String updateLostItemStatus(Long lostItemId) {
-//		LostItem lostItem = lostItemRepository.findById(lostItemId)
-//			.orElseThrow(() -> new EntityNotFoundException("분실물을 찾을 수 없습니다."));
-//
-//		lostItem.updateStatus();
-//		return "분실물이 수취되었습니다.";
-//	}
+	@Override
+	public void updateLostItemStatus(Long lostItemId, Long venueId, Member member) {
+
+		LostItem lostItem = lostItemRepository.findById(lostItemId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LostItem_NOT_FOUND));
+		Venue venue = venueRepository.findById(venueId)
+				.orElseThrow(() -> new GeneralException(ErrorStatus.VENUE_NOT_FOUND));
+		validateOwner(member, venue);
+
+		lostItem.updateStatus();
+		lostItemRepository.save(lostItem);
+	}
 
 	// 사장 확인
 	private void validateOwner(Member member, Venue venue) {
