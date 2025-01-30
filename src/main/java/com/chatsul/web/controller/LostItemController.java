@@ -54,14 +54,13 @@ public class LostItemController {
 //	}
 
 	//사장님이 사용하는 API
-//	@Operation(summary = "사장님용 분실물 목록 조회 API", description = "page에는 조회할 페이지 목차를 입력하세요")
-//	@GetMapping("/business/{page}")
-//	public ResponseEntity<LostItemResponseDTO> getLostItems(
-//		@PathVariable(name = "page") int page) {
-//		Pageable pageable = PageRequest.of(page - 1, 10);
-//		LostItemResponseDTO response = lostItemService.getLostItems(pageable);
-//		return ResponseEntity.ok(response);
-//	}
+	@Operation(summary = "사장님용 분실물 목록 조회 API", description = "page에는 조회할 페이지 목차를 입력하세요")
+	@GetMapping("/business/{venueId}/list/{page}")
+	public ApiResponse<LostItemResponseDTO.LostItemPreViewListDTO> getLostItems(
+			@PathVariable("venueId") Long venueId, @PathVariable("page") Integer page, @CurrentMember Member member) {
+		Page<LostItem> lostItems = lostItemQueryService.getLostItemsByBusiness(page, member, venueId);
+		return ApiResponse.onSuccess(LostItemConverter.lostItemPreViewListDTO(lostItems));
+	}
 
 	@Operation(summary = "사장님용 분실물 세부조회 API", description = "조회할 분실물의 id를 입력하세요")
 	@GetMapping("/business/{venueId}/detail/{lostItemId}")

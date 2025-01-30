@@ -40,7 +40,26 @@ public class LostItemQueryServiceImpl implements LostItemQueryService {
         return lostItems;
     }
 
-    // 사장님용용 분실물 상세 조회
+    // 사장님용 분실물 조회
+    @Override
+    public Page<LostItem> getLostItemsByBusiness(Integer page, Member member, Long venueId) {
+
+        Venue venue = venueRepository.findById(venueId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.VENUE_NOT_FOUND));
+
+        validateOwner(member, venue);
+
+        PageRequest pageRequest = PageRequest.of(page, 7, Sort.by(Sort.Direction.DESC, "foundDate"));
+        Page<LostItem> lostItems = lostItemRepository.findAllByVenueId(venueId, pageRequest);
+
+        if (lostItems.isEmpty()) {
+            throw new GeneralException(ErrorStatus.LostItem_NOT_FOUND);
+        }
+
+        return lostItems;
+    }
+
+    // 사장님용 분실물 상세 조회
     @Override
     public LostItemResponseDTO.LostItemDetailDTO getLostItemDetail(Long lostItemId, Member member, Long venueId) {
 
