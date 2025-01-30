@@ -1,11 +1,14 @@
 package com.chatsul.service.LostItemService;
 
+import com.chatsul.domain.LostItem;
+import com.chatsul.domain.Member;
 import com.chatsul.web.dto.LostItemResponseDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 
 public interface LostItemQueryService {
-    LostItemResponseDTO getLostItems(Pageable pageable);
+    Page<LostItem> getLostItems(Integer page, Member member, Long venueId);
 
     LostItemResponseDTO.LostItemDetail getLostItemDetail(Long lostItemId);
 }

@@ -3,19 +3,18 @@ package com.chatsul.web.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.chatsul.annotation.CurrentMember;
+import com.chatsul.apiPayload.ApiResponse;
+import com.chatsul.converter.LostItemConverter;
+import com.chatsul.domain.LostItem;
+import com.chatsul.domain.Member;
+import com.chatsul.service.LostItemService.LostItemQueryService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.chatsul.service.LostItemService;
 import com.chatsul.web.dto.LostItemRequestDTO;
 import com.chatsul.web.dto.LostItemResponseDTO;
 
@@ -28,16 +27,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LostItemController {
 
-	private final LostItemService lostItemService;
+	private final LostItemQueryService lostItemQueryService;
 
 	//손님이 사용하는 API
 	@Operation(summary = "손님용 분실물 목록 조회 API", description = "page에는 조회할 페이지목차를 입력하세요")
-	@GetMapping("/member/{page}")
-	public ResponseEntity<LostItemResponseDTO> getMemberLostItems(
-		@PathVariable(name = "page") int page) {
-		Pageable pageable = PageRequest.of(page - 1, 10);
-		LostItemResponseDTO response = lostItemService.getLostItems(pageable);
-		return ResponseEntity.ok(response);
+	@GetMapping("/member/list/{venueId}/{page}")
+	public ApiResponse<LostItemResponseDTO.LostItemPreViewListDTO> getMemberLostItems(
+			@PathVariable("venueId") Long venueId, @PathVariable("page") Integer page, @CurrentMember Member member) {
+		Page<LostItem> lostItemList = lostItemQueryService.getLostItems(page, member, venueId);
+		return ApiResponse.onSuccess(LostItemConverter.lostItemPreViewListDTO(lostItemList));
 	}
 
 	@Operation(summary = "손님용 분실물 세부조회 API", description = "조회할 분실물의 id를 입력하세요")

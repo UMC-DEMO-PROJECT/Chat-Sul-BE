@@ -15,7 +15,7 @@ public interface LostItemRepository extends JpaRepository<LostItem, Long> {
 
 	List<LostItem> findTop6ByOrderByCreatedAtDesc();
 
-	Page<LostItem> findAllByOrderByCreatedAtDesc(Pageable pageable);
+	Page<LostItem> findAllByVenueId(Long venueId, Pageable pageable);
 
-	void deleteByLostItemId(@Param("id") Long id);
+	void deleteByLostItemId(Long id);
 }
