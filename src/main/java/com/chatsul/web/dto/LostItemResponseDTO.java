@@ -33,30 +33,28 @@ public class LostItemResponseDTO {
 	@Builder
 	@NoArgsConstructor
 	@AllArgsConstructor
-	public static class LostItemDTO { //LostItem을 LostItemDTO로 변환
-		private Long lostItemId;
-		private String title;
-		private LocalDate foundDate;
-		private String lostItemStatus;
-		private Long venueId;
-		private String venueName;
-		private String venueAddress;
-		private String venuePhone;
-
-		public static LostItemDTO from(LostItem entity) {
-			Venue venue = entity.getVenue();
-			return LostItemDTO.builder()
-				.lostItemId(entity.getLostItemId())
-				.title(entity.getTitle())
-				.foundDate(entity.getFoundDate())
-				.lostItemStatus(entity.getLostItemStatus() == LostItemStatus.Lost ? "미수취" : "완료")
-				.venueId(entity.getVenue().getVenueId())
-				.venueName(entity.getVenue().getName())
-				.venueAddress(entity.getVenue().getAddress())
-				.venuePhone(entity.getVenue().getPhone())
-				.build();
-		}
+	public static class LostItemPreViewDTO { //LostItem을 LostItemDTO로 변환
+		Long lostItemId;
+		String title;
+		LocalDate foundDate;
+		LostItemStatus lostItemStatus;
+		String venueName;
+		String venueAddress;
+		String venuePhone;
 	}
+	@Getter
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class LostItemPreViewListDTO {
+		List<LostItemPreViewDTO> lostItemPreViewDTOList;
+		Integer listSize;
+		Integer totalPage;
+		Long totalElements;
+		Boolean isFirst;
+		Boolean isLast;
+	}
+
 
 	@Getter
 	@Builder
@@ -68,40 +66,10 @@ public class LostItemResponseDTO {
 		private String itemImg;
 		private String description;
 
-		public static LostItemDetail toDetailItem(LostItem entity) {
-
-			String status;
-			if (entity.getLostItemStatus() == null) {
-				status = "미수취";
-			} else {
-				status = entity.getLostItemStatus().toString().equals("Lost") ? "미수취" : "완료";
-			}
-
-			return LostItemDetail.builder()
-				.lostItemId(entity.getLostItemId())
-				.title(entity.getTitle())
-				.foundDate(entity.getFoundDate())
-				.lostItemStatus((entity.getLostItemStatus() == LostItemStatus.Lost ? "미수취" : "완료"))
-				.itemImg(entity.getItemImg())
-				.description(entity.getDescription())
-				.build();
-		}
 	}
 
 	public static LostItemResponseDTO LostItemList(Page<LostItem> page) {
-
-		int totalElements = (int)page.getTotalElements();
-		int totalPages = (totalElements + PAGE_SIZE - 1) / PAGE_SIZE;
-
-		return LostItemResponseDTO.builder()
-			.content(page.getContent().stream()
-				.map(LostItemDTO::from)
-				.collect(Collectors.toList()))
-			.currentPage(page.getNumber() + 1)
-			.totalPages(page.getTotalPages())
-			.totalElements(page.getTotalElements())
-			.hasNext(page.hasNext())
-			.build();
+		return null;
 	}
 
 	public static LostItemDetail detail(LostItem entity) {
