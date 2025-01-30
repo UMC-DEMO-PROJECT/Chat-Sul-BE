@@ -15,14 +15,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class LostItem extends BaseEntity {
 
@@ -50,6 +48,6 @@ public class LostItem extends BaseEntity {
 	private Venue venue;
 
 	public void updateStatus() {
-		this.lostItemStatus = LostItemStatus.Found;
+		this.lostItemStatus = LostItemStatus.FOUND;
 	}
 }
