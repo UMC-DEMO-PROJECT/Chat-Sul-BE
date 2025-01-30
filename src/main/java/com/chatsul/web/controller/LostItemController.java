@@ -84,7 +84,8 @@ public class LostItemController {
 		return ApiResponse.onSuccess(LostItemConverter.toLostItemResultDTO(lostItem));
 	}
 
-	@DeleteMapping("/business/{venueId}/delete/{lostItemId}")  //분실물 삭제
+	@Operation(summary = "사장님용 분실물 삭제 API")
+	@DeleteMapping("/business/{venueId}/delete/{lostItemId}")
 	public ApiResponse<String> deleteLostItem(
 			@PathVariable("venueId") Long venueId , @PathVariable(name = "lostItemId") Long lostItemId, @CurrentMember Member member) {
 		lostItemCommandService.deleteLostItem(lostItemId, venueId, member);
