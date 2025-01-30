@@ -32,6 +32,7 @@ public class LostItemConverter {
 				.description(lostItem.getDescription())
 				.foundDate(LocalDate.now())
 				.lostItemStatus(LostItemStatus.LOST)
+				.itemImg(lostItem.getItemImg())
 				.venue(venue)
 				.member(member)
 				.build();
@@ -61,6 +62,18 @@ public class LostItemConverter {
 				.totalElements(lostItemList.getTotalElements())
 				.isFirst(lostItemList.isFirst())
 				.isLast(lostItemList.isLast())
+				.build();
+	}
+
+	public static LostItemResponseDTO.LostItemDetailDTO lostItemDetailDTO(LostItem lostItem) {
+		return LostItemResponseDTO.LostItemDetailDTO.builder()
+				.lostItemId(lostItem.getLostItemId())
+				.title(lostItem.getTitle())
+				.description(lostItem.getDescription())
+				.foundDate(lostItem.getFoundDate())
+				.lostItemStatus(lostItem.getLostItemStatus())
+				.itemImg(lostItem.getItemImg())
+				.venueName(lostItem.getVenue().getName())
 				.build();
 	}
 }

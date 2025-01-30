@@ -63,17 +63,13 @@ public class LostItemController {
 //		return ResponseEntity.ok(response);
 //	}
 
-//	@Operation(summary = "사장님용 분실물 세부조회 API", description = "조회할 분실물의 id를 입력하세요")
-//	@GetMapping("/business/{lostItemId}")
-//	public ResponseEntity<LostItemResponseDTO.LostItemDetail> getLostItemDetail(
-//		@PathVariable(name = "lostItemId") Long lostItemId) {
-//		try {
-//			LostItemResponseDTO.LostItemDetail detail = lostItemService.getLostItemDetail(lostItemId);
-//			return ResponseEntity.ok(detail);
-//		} catch (EntityNotFoundException e) {
-//			return ResponseEntity.notFound().build();
-//		}
-//	}
+	@Operation(summary = "사장님용 분실물 세부조회 API", description = "조회할 분실물의 id를 입력하세요")
+	@GetMapping("/business/{venueId}/detail/{lostItemId}")
+	public ApiResponse<LostItemResponseDTO.LostItemDetailDTO> getLostItemDetail(
+		@PathVariable("venueId") Long venueId , @PathVariable("lostItemId") Long lostItemId, @CurrentMember Member member) {
+		LostItemResponseDTO.LostItemDetailDTO lostItemDetail = lostItemQueryService.getLostItemDetail(lostItemId, member, venueId);
+		return ApiResponse.onSuccess(lostItemDetail);
+	}
 
 	@Operation(summary = "사장님용 분실물 등록 API")
 	@PostMapping("/business/{venueId}/post")  //분실물 등록

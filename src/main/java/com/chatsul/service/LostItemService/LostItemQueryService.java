@@ -10,5 +10,5 @@ import org.springframework.data.domain.Pageable;
 public interface LostItemQueryService {
     Page<LostItem> getLostItems(Integer page, Member member, Long venueId);
 
-    LostItemResponseDTO.LostItemDetail getLostItemDetail(Long lostItemId);
+    LostItemResponseDTO.LostItemDetailDTO getLostItemDetail(Long lostItemId, Member member, Long venueId);
 }
