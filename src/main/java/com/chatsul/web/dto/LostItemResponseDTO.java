@@ -1,6 +1,7 @@
 package com.chatsul.web.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,14 +21,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 public class LostItemResponseDTO {
-	@NotNull
-	private List<LostItemDTO> content;
-	private int currentPage;
-	private int totalPages;
-	private long totalElements;
-	private boolean hasNext;
 
-	public static final int PAGE_SIZE = 6;
+	@Getter
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class LostItemResultDTO {
+		Long lostItemId;
+		String title;
+		LocalDate foundDate;
+		LostItemStatus lostItemStatus;
+		LocalDateTime createdAt;
+	}
 
 	@Getter
 	@Builder
@@ -66,14 +71,6 @@ public class LostItemResponseDTO {
 		private String itemImg;
 		private String description;
 
-	}
-
-	public static LostItemResponseDTO LostItemList(Page<LostItem> page) {
-		return null;
-	}
-
-	public static LostItemDetail detail(LostItem entity) {
-		return LostItemDetail.toDetailItem(entity);
 	}
 
 }

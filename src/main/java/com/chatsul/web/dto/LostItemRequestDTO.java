@@ -4,11 +4,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
+import java.time.LocalDate;
+
 public class LostItemRequestDTO {
-    private Long lostItemId;
-    private String title;
-    private String itemImg;
-    private String description;
-    private Long venueId;
+
+    @Getter
+    public static class RegisterLostItemRequestDTO {
+        private String title;
+        private String itemImg;
+        private String description;
+        private LocalDate foundDate;
+    }
 }
