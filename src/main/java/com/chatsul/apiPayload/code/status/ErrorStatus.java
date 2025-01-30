@@ -31,6 +31,9 @@ public enum ErrorStatus implements BaseErrorCode {
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER404", "멤버를 찾을 수 없습니다."),
 	MEMBER_EXIST(HttpStatus.CONFLICT, "MEMBER409", "멤버가 이미 존재합니다."),
 
+	// LostItem
+	LostItem_NOT_FOUND(HttpStatus.NOT_FOUND, "LOSTITEM404", "분실물을 찾을 수 없습니다."),
+
 	// Jwt
 	EMPTY_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN400", "헤더에 토큰이 비어 있습니다."),
 	INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN401", "토큰이 유효하지 않습니다."),
