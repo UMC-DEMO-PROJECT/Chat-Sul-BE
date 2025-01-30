@@ -1,11 +1,13 @@
 package com.chatsul.service.LostItemService;
 
+import com.chatsul.domain.LostItem;
+import com.chatsul.domain.Member;
 import com.chatsul.web.dto.LostItemRequestDTO;
 
 public interface LostItemCommandService {
-    String saveLostItem(LostItemRequestDTO lostItemRequestDTO);
+    LostItem saveLostItem(LostItemRequestDTO.RegisterLostItemRequestDTO request, Long venueId, Member member);
 
-    void deleteLostItem(LostItemRequestDTO lostItemRequestDTO);
-
-    String updateLostItemStatus(Long lostItemId);
+//    void deleteLostItem(LostItemRequestDTO lostItemRequestDTO);
+//
+//    String updateLostItemStatus(Long lostItemId);
 }
