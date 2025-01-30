@@ -32,6 +32,7 @@ public enum ErrorStatus implements BaseErrorCode {
 	MEMBER_EXIST(HttpStatus.CONFLICT, "MEMBER409", "멤버가 이미 존재합니다."),
 
 	// LostItem
+	LOST_ITEM_VENUE_MISMATCH(HttpStatus.FORBIDDEN, "LOSTITEM403", "해당 분실물은 현재 매장과 일치하지 않습니다."),
 	LostItem_NOT_FOUND(HttpStatus.NOT_FOUND, "LOSTITEM404", "분실물을 찾을 수 없습니다."),
 
 	// Jwt
