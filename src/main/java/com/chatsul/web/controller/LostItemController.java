@@ -1,8 +1,5 @@
 package com.chatsul.web.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.chatsul.annotation.CurrentMember;
 import com.chatsul.apiPayload.ApiResponse;
 import com.chatsul.converter.LostItemConverter;
@@ -12,16 +9,12 @@ import com.chatsul.service.LostItemService.LostItemCommandService;
 import com.chatsul.service.LostItemService.LostItemQueryService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.chatsul.web.dto.LostItemRequestDTO;
 import com.chatsul.web.dto.LostItemResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -34,24 +27,20 @@ public class LostItemController {
 
 	//손님이 사용하는 API
 	@Operation(summary = "손님용 분실물 목록 조회 API", description = "page에는 조회할 페이지목차를 입력하세요")
-	@GetMapping("/member/list/{venueId}/{page}")
+	@GetMapping("/member/{venueId}/list/{page}")
 	public ApiResponse<LostItemResponseDTO.LostItemPreViewListDTO> getMemberLostItems(
 			@PathVariable("venueId") Long venueId, @PathVariable("page") Integer page, @CurrentMember Member member) {
 		Page<LostItem> lostItemList = lostItemQueryService.getLostItems(page, member, venueId);
 		return ApiResponse.onSuccess(LostItemConverter.lostItemPreViewListDTO(lostItemList));
 	}
 
-//	@Operation(summary = "손님용 분실물 세부조회 API", description = "조회할 분실물의 id를 입력하세요")
-//	@GetMapping("/member/{lostItemId}")
-//	public ResponseEntity<LostItemResponseDTO.LostItemDetail> getMemberLostItemDetail(
-//		@PathVariable(name = "lostItemId") Long lostItemId) {
-//		try {
-//			LostItemResponseDTO.LostItemDetail detail = lostItemService.getLostItemDetail(lostItemId);
-//			return ResponseEntity.ok(detail);
-//		} catch (EntityNotFoundException e) {
-//			return ResponseEntity.notFound().build();
-//		}
-//	}
+	@Operation(summary = "손님용 분실물 세부조회 API", description = "조회할 분실물의 id를 입력하세요")
+	@GetMapping("/member/{venueId}/detail/{lostItemId}")
+	public ApiResponse<LostItemResponseDTO.LostItemDetailDTO> getMemberLostItemDetail(
+			@PathVariable("venueId") Long venueId , @PathVariable("lostItemId") Long lostItemId, @CurrentMember Member member) {
+		LostItemResponseDTO.LostItemDetailDTO lostItemDetail = lostItemQueryService.getLostItemDetailByMember(lostItemId, member, venueId);
+		return ApiResponse.onSuccess(lostItemDetail);
+	}
 
 	//사장님이 사용하는 API
 	@Operation(summary = "사장님용 분실물 목록 조회 API", description = "page에는 조회할 페이지 목차를 입력하세요")
@@ -70,7 +59,7 @@ public class LostItemController {
 		return ApiResponse.onSuccess(lostItemDetail);
 	}
 
-	@Operation(summary = "사장님용 분실물 등록 API")
+	@Operation(summary = "사장님용 분실물 등록 API", description = "이미지 등록은 아직 지원하지 않습니다.")
 	@PostMapping("/business/{venueId}/post")  //분실물 등록
 	public ApiResponse<LostItemResponseDTO.LostItemResultDTO> createLostItem(
 			@PathVariable("venueId") Long venueId,

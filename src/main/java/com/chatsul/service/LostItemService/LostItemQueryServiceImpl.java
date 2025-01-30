@@ -40,6 +40,21 @@ public class LostItemQueryServiceImpl implements LostItemQueryService {
         return lostItems;
     }
 
+    @Override
+    public LostItemResponseDTO.LostItemDetailDTO getLostItemDetailByMember(Long lostItemId, Member member, Long venueId) {
+        LostItem lostItem = lostItemRepository.findById(lostItemId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.LostItem_NOT_FOUND));
+
+        Venue venue = venueRepository.findById(venueId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.VENUE_NOT_FOUND));
+
+        if (!lostItem.getVenue().equals(venue)) {
+            throw new GeneralException(ErrorStatus.LOST_ITEM_VENUE_MISMATCH);
+        }
+
+        return LostItemConverter.lostItemDetailDTO(lostItem);
+    }
+
     // 사장님용 분실물 조회
     @Override
     public Page<LostItem> getLostItemsByBusiness(Integer page, Member member, Long venueId) {
