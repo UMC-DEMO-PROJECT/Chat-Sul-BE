@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.chatsul.domain.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +14,28 @@ import com.chatsul.domain.enums.LostItemStatus;
 import com.chatsul.web.dto.LostItemRequestDTO;
 import com.chatsul.web.dto.LostItemResponseDTO;
 
-@Component
 public class LostItemConverter {
+
+	public static LostItemResponseDTO.LostItemResultDTO toLostItemResultDTO(LostItem lostItem) {
+		return LostItemResponseDTO.LostItemResultDTO.builder()
+				.lostItemId(lostItem.getLostItemId())
+				.title(lostItem.getTitle())
+				.foundDate(lostItem.getFoundDate())
+				.lostItemStatus(lostItem.getLostItemStatus())
+				.createdAt(lostItem.getCreatedAt())
+				.build();
+	}
+
+	public static LostItem toLostItem(LostItemRequestDTO.RegisterLostItemRequestDTO lostItem, Venue venue, Member member) {
+		return LostItem.builder()
+				.title(lostItem.getTitle())
+				.description(lostItem.getDescription())
+				.foundDate(LocalDate.now())
+				.lostItemStatus(LostItemStatus.LOST)
+				.venue(venue)
+				.member(member)
+				.build();
+	}
 
 	public static LostItemResponseDTO.LostItemPreViewDTO lostItemPreViewDTO(LostItem lostItem) {
 		return LostItemResponseDTO.LostItemPreViewDTO.builder()
