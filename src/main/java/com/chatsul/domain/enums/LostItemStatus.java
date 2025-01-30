@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum LostItemStatus {
-    Lost("미수취"),
-    Found("완료");
+    LOST("미수취"),
+    FOUND("완료");
 
     private final String status;
 }
