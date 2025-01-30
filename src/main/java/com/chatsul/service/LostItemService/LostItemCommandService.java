@@ -7,7 +7,7 @@ import com.chatsul.web.dto.LostItemRequestDTO;
 public interface LostItemCommandService {
     LostItem saveLostItem(LostItemRequestDTO.RegisterLostItemRequestDTO request, Long venueId, Member member);
 
-//    void deleteLostItem(LostItemRequestDTO lostItemRequestDTO);
-//
+    void deleteLostItem(Long lostItemId, Long venueId, Member member);
+
     void updateLostItemStatus(Long lostItemId, Long venueId, Member member);
 }

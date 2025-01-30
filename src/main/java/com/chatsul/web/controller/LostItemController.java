@@ -84,18 +84,12 @@ public class LostItemController {
 		return ApiResponse.onSuccess(LostItemConverter.toLostItemResultDTO(lostItem));
 	}
 
-//	@DeleteMapping("/business/{lostItemId}")  //분실물 삭제
-//	public ResponseEntity<?> deleteLostItem(@PathVariable(name = "lostItemId") Long lostItemId) {
-//		LostItemRequestDTO requestDTO = LostItemRequestDTO.builder()
-//			.lostItemId(lostItemId)
-//			.build();
-//		lostItemService.deleteLostItem(requestDTO);
-//
-//		Map<String, String> response = new HashMap<>();
-//		response.put("message", String.format("분실물 ID: %d가 성공적으로 삭제되었습니다.", lostItemId));
-//
-//		return ResponseEntity.ok(response);
-//	}
+	@DeleteMapping("/business/{venueId}/delete/{lostItemId}")  //분실물 삭제
+	public ApiResponse<String> deleteLostItem(
+			@PathVariable("venueId") Long venueId , @PathVariable(name = "lostItemId") Long lostItemId, @CurrentMember Member member) {
+		lostItemCommandService.deleteLostItem(lostItemId, venueId, member);
+		return ApiResponse.onSuccess("분실물이 삭제되었습니다.");
+	}
 
 	@Operation(summary = "사장님용 수취상태 변경 API", description = "상태를 변경할 분실물의 id를 입력하세요")
 	@PatchMapping("/business/{venueId}/status/{lostItemId}")

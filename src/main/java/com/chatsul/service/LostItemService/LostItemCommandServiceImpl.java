@@ -40,15 +40,24 @@ public class LostItemCommandServiceImpl implements LostItemCommandService {
 		return lostItemRepository.save(lostItem);
 	}
 
-//	@Override
-//	public void deleteLostItem(LostItemRequestDTO requestDTO) {
-//		if (!lostItemRepository.existsById(requestDTO.getLostItemId())) {
-//			throw new EntityNotFoundException("분실물을 찾을 수 없습니다.");
-//		}
-//
-//		lostItemRepository.deleteByLostItemId(requestDTO.getLostItemId());
-//	}
-//
+	@Override
+	public void deleteLostItem(Long lostItemId, Long venueId, Member member) {
+
+		Venue venue = venueRepository.findById(venueId)
+				.orElseThrow(() -> new GeneralException(ErrorStatus.VENUE_NOT_FOUND));
+
+		validateOwner(member, venue);
+
+		LostItem lostItem = lostItemRepository.findById(lostItemId)
+				.orElseThrow(() -> new GeneralException(ErrorStatus.LostItem_NOT_FOUND));
+
+		if (!lostItem.getVenue().equals(venue)) {
+			throw new GeneralException(ErrorStatus.LOST_ITEM_VENUE_MISMATCH);
+		}
+
+		lostItemRepository.delete(lostItem);
+	}
+
 	@Override
 	public void updateLostItemStatus(Long lostItemId, Long venueId, Member member) {
 
