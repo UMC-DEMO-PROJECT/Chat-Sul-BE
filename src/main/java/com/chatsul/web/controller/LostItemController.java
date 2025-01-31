@@ -81,7 +81,7 @@ public class LostItemController {
 	public ApiResponse<String> updateLostItemStatus(
 			@PathVariable("venueId") Long venueId, @PathVariable("lostItemId") Long lostItemId, @CurrentMember Member member) {
 		lostItemCommandService.updateLostItemStatus(lostItemId, venueId, member);
-		return ApiResponse.onSuccess("분실물 수취 상태가 변경되었습니다.");
+		return ApiResponse.onSuccess("분실물이 수취되었습니다.");
 	}
 
 	@Operation(summary = "분실물 검색 API",
@@ -93,5 +93,14 @@ public class LostItemController {
 			@PathVariable("page") Integer page, @CurrentMember Member member) {
 		Page<LostItem> lostItems = lostItemQueryService.searchLostItems(page, member, venueId, keyword);
 		return ApiResponse.onSuccess(LostItemConverter.lostItemPreViewListDTO(lostItems));
+	}
+
+	@Operation(summary = "사장님용 분실물 수정 API", description = "수정할 분실물의 id를 입력하세요")
+	@PatchMapping("/business/{venueId}/update/{lostItemId}")
+	public ApiResponse<LostItemResponseDTO.LostItemResultDTO> updateLostItem(
+			@PathVariable("venueId") Long venueId, @PathVariable("lostItemId") Long lostItemId,
+			@RequestBody @Valid LostItemRequestDTO.UpdateLostItemRequestDTO request, @CurrentMember Member member) {
+		LostItem lostItem = lostItemCommandService.updateLostItem(request, lostItemId, venueId, member);
+		return ApiResponse.onSuccess(LostItemConverter.toLostItemResultDTO(lostItem));
 	}
 }

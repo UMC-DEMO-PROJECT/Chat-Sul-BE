@@ -14,4 +14,12 @@ public class LostItemRequestDTO {
         private String itemImg;
         private String description;
     }
+
+    @Getter
+    public static class UpdateLostItemRequestDTO {
+        private String title;
+        private String itemImg;
+        private String description;
+        private LocalDate foundDate;
+    }
 }

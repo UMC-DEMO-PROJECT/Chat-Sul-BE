@@ -65,10 +65,35 @@ public class LostItemCommandServiceImpl implements LostItemCommandService {
 			.orElseThrow(() -> new GeneralException(ErrorStatus.LostItem_NOT_FOUND));
 		Venue venue = venueRepository.findById(venueId)
 				.orElseThrow(() -> new GeneralException(ErrorStatus.VENUE_NOT_FOUND));
+		if (!lostItem.getVenue().equals(venue)) {
+			throw new GeneralException(ErrorStatus.LOST_ITEM_VENUE_MISMATCH);
+		}
 		validateOwner(member, venue);
 
 		lostItem.updateStatus();
 		lostItemRepository.save(lostItem);
+	}
+
+	@Override
+	public LostItem updateLostItem(LostItemRequestDTO.UpdateLostItemRequestDTO request, Long lostItemId, Long venueId, Member member) {
+
+		LostItem lostItem = lostItemRepository.findById(lostItemId)
+				.orElseThrow(() -> new GeneralException(ErrorStatus.LostItem_NOT_FOUND));
+		Venue venue = venueRepository.findById(venueId)
+				.orElseThrow(() -> new GeneralException(ErrorStatus.VENUE_NOT_FOUND));
+
+		validateOwner(member, venue);
+
+		if (!lostItem.getVenue().equals(venue)) {
+			throw new GeneralException(ErrorStatus.LOST_ITEM_VENUE_MISMATCH);
+		}
+
+		if (request.getTitle() != null) lostItem.updateTitle(request.getTitle());
+		if (request.getItemImg() != null) lostItem.updateItemImg(request.getItemImg());
+		if (request.getDescription() != null) lostItem.updateDescription(request.getDescription());
+		if (request.getFoundDate() != null) lostItem.updateFoundDate(request.getFoundDate());
+
+		return lostItemRepository.save(lostItem);
 	}
 
 	// 사장 확인
