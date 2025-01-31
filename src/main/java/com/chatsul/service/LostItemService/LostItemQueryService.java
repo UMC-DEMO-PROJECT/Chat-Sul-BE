@@ -12,4 +12,5 @@ public interface LostItemQueryService {
     Page<LostItem> getLostItemsByBusiness(Integer page, Member member, Long venueId);
     LostItemResponseDTO.LostItemDetailDTO getLostItemDetail(Long lostItemId, Member member, Long venueId);
     LostItemResponseDTO.LostItemDetailDTO getLostItemDetailByMember(Long lostItemId, Member member, Long venueId);
+    Page<LostItem> searchLostItems(Integer page, Member member, Long venueId, String keyword);
 }

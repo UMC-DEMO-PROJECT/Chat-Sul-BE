@@ -87,6 +87,27 @@ public class LostItemQueryServiceImpl implements LostItemQueryService {
         return LostItemConverter.lostItemDetailDTO(lostItem);
     }
 
+    @Override
+    public Page<LostItem> searchLostItems(Integer page, Member member, Long venueId, String keyword) {
+
+        Pageable pageRequest = PageRequest.of(page, 6, Sort.by(Sort.Direction.DESC, "foundDate"));
+        Page<LostItem> lostItems;
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            // 검색어가 없을 경우 전체 목록 조회
+            lostItems = lostItemRepository.findAllByVenueId(venueId, pageRequest);
+        } else {
+            lostItems = lostItemRepository.findAllByVenueIdAndTitleContainingOrDescriptionContaining(
+                    venueId, keyword, keyword, pageRequest);
+        }
+
+        if (lostItems.isEmpty()) {
+            throw new GeneralException(ErrorStatus.LOST_ITEM_SEARCH_NOT_FOUND);
+        }
+
+        return lostItems;
+    }
+
     // 사장 확인
     private void validateOwner(Member member, Venue venue) {
         if (!member.getRole().equals(Role.OWNER)) {

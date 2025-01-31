@@ -34,6 +34,7 @@ public enum ErrorStatus implements BaseErrorCode {
 	// LostItem
 	LOST_ITEM_VENUE_MISMATCH(HttpStatus.FORBIDDEN, "LOSTITEM403", "해당 분실물은 현재 매장과 일치하지 않습니다."),
 	LostItem_NOT_FOUND(HttpStatus.NOT_FOUND, "LOSTITEM404", "분실물을 찾을 수 없습니다."),
+	LOST_ITEM_SEARCH_NOT_FOUND(HttpStatus.NOT_FOUND, "LOSTITEM405", "검색된 분실물이 없습니다."),
 
 	// Jwt
 	EMPTY_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN400", "헤더에 토큰이 비어 있습니다."),

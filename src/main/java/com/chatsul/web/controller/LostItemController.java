@@ -59,7 +59,7 @@ public class LostItemController {
 		return ApiResponse.onSuccess(lostItemDetail);
 	}
 
-	@Operation(summary = "사장님용 분실물 등록 API", description = "이미지 등록은 아직 지원하지 않습니다.")
+	@Operation(summary = "사장님용 분실물 등록 API", description = "이미지 등록은 아직 지원하지 않습니다.") // 이미지 등록 구현 후 설명 삭제 부탁드립니다
 	@PostMapping("/business/{venueId}/post")  //분실물 등록
 	public ApiResponse<LostItemResponseDTO.LostItemResultDTO> createLostItem(
 			@PathVariable("venueId") Long venueId,
@@ -82,5 +82,16 @@ public class LostItemController {
 			@PathVariable("venueId") Long venueId, @PathVariable("lostItemId") Long lostItemId, @CurrentMember Member member) {
 		lostItemCommandService.updateLostItemStatus(lostItemId, venueId, member);
 		return ApiResponse.onSuccess("분실물 수취 상태가 변경되었습니다.");
+	}
+
+	@Operation(summary = "분실물 검색 API",
+			description = "검색어를 입력하세요. "
+					+ "사장님과 손님이 동일한 api를 사용합니다.")
+	@GetMapping("/{venueId}/search/{page}")
+	public ApiResponse<LostItemResponseDTO.LostItemPreViewListDTO> searchLostItems(
+			@PathVariable("venueId") Long venueId, @RequestParam(value = "keyword", required = false) String keyword,
+			@PathVariable("page") Integer page, @CurrentMember Member member) {
+		Page<LostItem> lostItems = lostItemQueryService.searchLostItems(page, member, venueId, keyword);
+		return ApiResponse.onSuccess(LostItemConverter.lostItemPreViewListDTO(lostItems));
 	}
 }
