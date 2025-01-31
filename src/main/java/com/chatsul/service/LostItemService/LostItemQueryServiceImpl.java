@@ -33,9 +33,6 @@ public class LostItemQueryServiceImpl implements LostItemQueryService {
         PageRequest pageRequest = PageRequest.of(page, 6, Sort.by(Sort.Direction.DESC, "foundDate"));
         Page<LostItem> lostItems = lostItemRepository.findAllByVenueId(venueId, pageRequest);
 
-        if (lostItems.isEmpty()) {
-            throw new GeneralException(ErrorStatus.LostItem_NOT_FOUND);
-        }
 
         return lostItems;
     }
@@ -67,9 +64,6 @@ public class LostItemQueryServiceImpl implements LostItemQueryService {
         PageRequest pageRequest = PageRequest.of(page, 7, Sort.by(Sort.Direction.DESC, "foundDate"));
         Page<LostItem> lostItems = lostItemRepository.findAllByVenueId(venueId, pageRequest);
 
-        if (lostItems.isEmpty()) {
-            throw new GeneralException(ErrorStatus.LostItem_NOT_FOUND);
-        }
 
         return lostItems;
     }
