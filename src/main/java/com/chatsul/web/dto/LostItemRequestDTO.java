@@ -13,6 +13,5 @@ public class LostItemRequestDTO {
         private String title;
         private String itemImg;
         private String description;
-        private LocalDate foundDate;
     }
 }
