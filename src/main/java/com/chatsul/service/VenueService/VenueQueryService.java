@@ -7,4 +7,6 @@ import com.chatsul.domain.Venue;
 public interface VenueQueryService {
 
 	List<Venue> getAllLocationList();
+
+	Venue getVenueInfo(Long venueId);
 }

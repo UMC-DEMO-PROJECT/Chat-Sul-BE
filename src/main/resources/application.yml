@@ -9,7 +9,7 @@ spring:
       mode: never
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
@@ -18,11 +18,23 @@ spring:
         use_sql_comments: true
         default_batch_fetch_size: 1000
 
-
 kakao:
   api-key: ${KAKAO_API_KEY}
-
 
 springdoc:
   swagger-ui:
     path: /
+
+cloud:
+  aws:
+    s3:
+      bucket: chatsul
+      path:
+        menu: menu
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
