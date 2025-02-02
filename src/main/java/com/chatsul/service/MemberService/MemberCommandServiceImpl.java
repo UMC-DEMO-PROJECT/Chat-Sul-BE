@@ -6,14 +6,13 @@ import org.springframework.stereotype.Service;
 import com.chatsul.apiPayload.code.status.ErrorStatus;
 import com.chatsul.apiPayload.exception.GeneralException;
 import com.chatsul.converter.MemberConverter;
-import com.chatsul.converter.TokenConverter;
 import com.chatsul.domain.Member;
 import com.chatsul.domain.enums.Role;
 import com.chatsul.repository.MemberRepository;
 import com.chatsul.util.CookieUtil;
 import com.chatsul.util.JwtUtil;
 import com.chatsul.web.dto.MemberRequestDTO;
-import com.chatsul.web.dto.TokenResponseDTO;
+import com.chatsul.web.dto.MemberResponseDTO;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -51,7 +50,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 	}
 
 	@Override
-	public TokenResponseDTO.TokenDTO login(MemberRequestDTO.LoginDTO dto, HttpServletResponse response) {
+	public MemberResponseDTO.LoginSuccessDTO login(MemberRequestDTO.LoginDTO dto, HttpServletResponse response) {
 		Member loginMember = memberRepository.findByEmail(dto.getEmail())
 			.filter(m -> passwordEncoder.matches(dto.getPassword(), m.getPassword()))
 			.orElseThrow(
@@ -65,8 +64,9 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 		response.addCookie(cookie);
 
 		// AccessToken 발급
-		return TokenConverter.toTokenDTO(
-			jwtUtil.generateAccessToken(loginMember.getEmail())
+		return MemberConverter.toLoginSuccessDTO(
+			jwtUtil.generateAccessToken(loginMember.getEmail()),
+			loginMember.getRole()
 		);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.chatsul.domain.Member;
 import com.chatsul.domain.enums.Role;
 import com.chatsul.web.dto.MemberRequestDTO;
+import com.chatsul.web.dto.MemberResponseDTO;
 
 public class MemberConverter {
 
@@ -32,5 +33,12 @@ public class MemberConverter {
 				.provider(provider)
 				.providerId(providerId)
 				.build();
+	}
+
+	public static MemberResponseDTO.LoginSuccessDTO toLoginSuccessDTO(String accessToken, Role role) {
+		return MemberResponseDTO.LoginSuccessDTO.builder()
+			.accessToken(accessToken)
+			.role(role)
+			.build();
 	}
 }
