@@ -29,6 +29,7 @@ public class LostItemResponseDTO {
 	public static class LostItemResultDTO {
 		Long lostItemId;
 		String title;
+		String description;
 		LocalDate foundDate;
 		LostItemStatus lostItemStatus;
 		LocalDateTime createdAt;
@@ -44,8 +45,7 @@ public class LostItemResponseDTO {
 		LocalDate foundDate;
 		LostItemStatus lostItemStatus;
 		String venueName;
-		String venueAddress;
-		String venuePhone;
+		String description;
 	}
 
 	@Getter
