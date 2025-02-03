@@ -32,7 +32,7 @@ public class LostItemQueryServiceImpl implements LostItemQueryService {
     @Override
     public Page<LostItem> getLostItems(Integer page, Member member, Long venueId) {
 
-        PageRequest pageRequest = PageRequest.of(page, 6, Sort.by(Sort.Direction.ASC, "foundDate"));
+        PageRequest pageRequest = PageRequest.of(page, 6, Sort.by(Sort.Direction.DESC, "foundDate"));
         Page<LostItem> lostItems = lostItemRepository.findAllByVenueId(venueId, pageRequest);
 
 
@@ -63,7 +63,7 @@ public class LostItemQueryServiceImpl implements LostItemQueryService {
 
         validateOwner(member, venue);
 
-        PageRequest pageRequest = PageRequest.of(page, 7, Sort.by(Sort.Direction.ASC, "foundDate"));
+        PageRequest pageRequest = PageRequest.of(page, 7, Sort.by(Sort.Direction.DESC, "foundDate"));
         Page<LostItem> lostItems = lostItemRepository.findAllByVenueId(venueId, pageRequest);
 
 
@@ -92,7 +92,7 @@ public class LostItemQueryServiceImpl implements LostItemQueryService {
     @Override
     public Page<LostItem> searchLostItems(Integer page, Member member, Long venueId, String keyword) {
 
-        Pageable pageRequest = PageRequest.of(page, 6, Sort.by(Sort.Direction.ASC, "foundDate"));
+        Pageable pageRequest = PageRequest.of(page, 6, Sort.by(Sort.Direction.DESC, "foundDate"));
         Page<LostItem> lostItems;
 
         if (keyword == null || keyword.trim().isEmpty()) {
