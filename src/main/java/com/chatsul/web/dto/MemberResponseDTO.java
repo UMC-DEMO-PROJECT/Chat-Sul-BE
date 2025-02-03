@@ -1,5 +1,7 @@
 package com.chatsul.web.dto;
 
+import java.util.List;
+
 import com.chatsul.domain.enums.Role;
 
 import lombok.AllArgsConstructor;
@@ -19,5 +21,6 @@ public class MemberResponseDTO {
 	public static class LoginSuccessDTO {
 		String accessToken;
 		Role role;
+		List<Long> venueIds;
 	}
 }
