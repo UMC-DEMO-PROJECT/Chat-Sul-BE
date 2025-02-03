@@ -20,6 +20,7 @@ public class LostItemConverter {
 		return LostItemResponseDTO.LostItemResultDTO.builder()
 				.lostItemId(lostItem.getLostItemId())
 				.title(lostItem.getTitle())
+				.description(lostItem.getDescription())
 				.foundDate(lostItem.getFoundDate())
 				.lostItemStatus(lostItem.getLostItemStatus())
 				.createdAt(lostItem.getCreatedAt())
@@ -45,8 +46,7 @@ public class LostItemConverter {
 				.foundDate(lostItem.getFoundDate())
 				.lostItemStatus(lostItem.getLostItemStatus())
 				.venueName(lostItem.getVenue().getName())
-				.venueAddress(lostItem.getVenue().getAddress())
-				.venuePhone(lostItem.getVenue().getPhone())
+				.description(lostItem.getDescription())
 				.build();
 	}
 
