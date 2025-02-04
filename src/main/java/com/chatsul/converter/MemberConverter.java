@@ -1,6 +1,7 @@
 package com.chatsul.converter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.chatsul.domain.Member;
 import com.chatsul.domain.enums.Role;
@@ -25,20 +26,22 @@ public class MemberConverter {
 	public static Member toSocialMember(String provider, String providerId, String password) {
 		String email = String.format("%s@%s.com", providerId, provider);
 		return Member.builder()
-				.email(email)
-				.password(password)
-				.name(provider)
-				.phoneNumber("01011111111")
-				.role(Role.TEMP)
-				.provider(provider)
-				.providerId(providerId)
-				.build();
+			.email(email)
+			.password(password)
+			.name(provider)
+			.phoneNumber("01011111111")
+			.role(Role.TEMP)
+			.provider(provider)
+			.providerId(providerId)
+			.build();
 	}
 
-	public static MemberResponseDTO.LoginSuccessDTO toLoginSuccessDTO(String accessToken, Role role) {
+	public static MemberResponseDTO.LoginSuccessDTO toLoginSuccessDTO(String accessToken, Role role,
+		List<Long> venueIds) {
 		return MemberResponseDTO.LoginSuccessDTO.builder()
 			.accessToken(accessToken)
 			.role(role)
+			.venueIds(venueIds)
 			.build();
 	}
 }
