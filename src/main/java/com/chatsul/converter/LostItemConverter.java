@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.chatsul.aws.AmazonS3Manager;
+import com.chatsul.domain.ItemImage;
 import com.chatsul.domain.LostItem;
 import com.chatsul.domain.Member;
 import com.chatsul.domain.Uuid;
@@ -32,13 +33,12 @@ public class LostItemConverter {
 	}
 
 	public static LostItem toLostItem(LostItemRequestDTO.RegisterLostItemRequestDTO lostItem, Venue venue,
-		Member member, List<String> itemImg) {
+		Member member) {
 		return LostItem.builder()
 			.title(lostItem.getTitle())
 			.description(lostItem.getDescription())
 			.foundDate(LocalDate.now())
 			.lostItemStatus(LostItemStatus.LOST)
-			.itemImg(itemImg)
 			.venue(venue)
 			.member(member)
 			.build();
@@ -77,18 +77,25 @@ public class LostItemConverter {
 			.description(lostItem.getDescription())
 			.foundDate(lostItem.getFoundDate())
 			.lostItemStatus(lostItem.getLostItemStatus())
-			.itemImg(lostItem.getItemImg())
+			.itemImg(lostItem.getItemImageList().stream()
+				.map(ItemImage::getImageUrl)
+				.collect(Collectors.toList()))
 			.venueName(lostItem.getVenue().getName())
 			.build();
 	}
 
-	public static List<String> multipartFilesToUrls(List<MultipartFile> files, UuidRepository uuidRepository,
-		AmazonS3Manager s3Manager) {
+	public static List<ItemImage> multipartFilesToUrls(List<MultipartFile> files, UuidRepository uuidRepository,
+		AmazonS3Manager s3Manager, LostItem lostItem) {
 		return files.stream()
 			.map(file -> {
 				String uuid = UUID.randomUUID().toString();
 				Uuid saveUuid = uuidRepository.save(Uuid.builder().uuid(uuid).build());
-				return s3Manager.uploadFile(s3Manager.generateLostItemKeyName(saveUuid), file);
+				String imageUrl = s3Manager.uploadFile(s3Manager.generateLostItemKeyName(saveUuid), file);
+
+				return ItemImage.builder()
+					.imageUrl(imageUrl)
+					.lostItem(lostItem)
+					.build();
 			})
 			.collect(Collectors.toList());
 	}

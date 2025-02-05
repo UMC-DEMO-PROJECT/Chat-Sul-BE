@@ -10,10 +10,12 @@ import com.chatsul.apiPayload.code.status.ErrorStatus;
 import com.chatsul.apiPayload.exception.GeneralException;
 import com.chatsul.aws.AmazonS3Manager;
 import com.chatsul.converter.LostItemConverter;
+import com.chatsul.domain.ItemImage;
 import com.chatsul.domain.LostItem;
 import com.chatsul.domain.Member;
 import com.chatsul.domain.Venue;
 import com.chatsul.domain.enums.Role;
+import com.chatsul.repository.ItemIamgeRepository;
 import com.chatsul.repository.LostItemRepository;
 import com.chatsul.repository.UuidRepository;
 import com.chatsul.repository.VenueRepository;
@@ -31,6 +33,7 @@ public class LostItemCommandServiceImpl implements LostItemCommandService {
 	private final VenueRepository venueRepository;
 	private final AmazonS3Manager s3Manager;
 	private final UuidRepository uuidRepository;
+	private final ItemIamgeRepository itemIamgeRepository;
 
 	@Override
 	public LostItem saveLostItem(LostItemRequestDTO.RegisterLostItemRequestDTO request, Long venueId, Member member) {
@@ -43,10 +46,12 @@ public class LostItemCommandServiceImpl implements LostItemCommandService {
 
 		validateOwner(member, venue);
 
-		List<String> imageUrlList = LostItemConverter.multipartFilesToUrls(
-			request.getItemImg(), uuidRepository, s3Manager);
+		LostItem lostItem = LostItemConverter.toLostItem(request, venue, member);
 
-		LostItem lostItem = LostItemConverter.toLostItem(request, venue, member, imageUrlList);
+		List<ItemImage> imageUrlList = LostItemConverter.multipartFilesToUrls(
+			request.getItemImg(), uuidRepository, s3Manager, lostItem);
+
+		itemIamgeRepository.saveAll(imageUrlList);
 
 		return lostItemRepository.save(lostItem);
 	}
@@ -103,8 +108,8 @@ public class LostItemCommandServiceImpl implements LostItemCommandService {
 		if (request.getTitle() != null)
 			lostItem.updateTitle(request.getTitle());
 		if (request.getItemImg() != null) {
-			List<String> imageUrlList = LostItemConverter.multipartFilesToUrls(
-				request.getItemImg(), uuidRepository, s3Manager);
+			List<ItemImage> imageUrlList = LostItemConverter.multipartFilesToUrls(
+				request.getItemImg(), uuidRepository, s3Manager, lostItem);
 
 			lostItem.updateItemImg(imageUrlList);
 		}

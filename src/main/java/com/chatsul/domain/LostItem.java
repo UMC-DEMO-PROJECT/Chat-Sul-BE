@@ -6,7 +6,7 @@ import java.util.List;
 import com.chatsul.domain.common.BaseEntity;
 import com.chatsul.domain.enums.LostItemStatus;
 
-import jakarta.persistence.ElementCollection;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -16,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,8 +40,8 @@ public class LostItem extends BaseEntity {
 
 	private String description;
 
-	@ElementCollection
-	private List<String> itemImg;
+	@OneToMany(mappedBy = "lostItem", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ItemImage> itemImageList;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
@@ -65,8 +66,8 @@ public class LostItem extends BaseEntity {
 		this.description = description;
 	}
 
-	public void updateItemImg(List<String> itemImg) {
-		this.itemImg = itemImg;
+	public void updateItemImg(List<ItemImage> itemImageList) {
+		this.itemImageList = itemImageList;
 	}
 
 	public void updateFoundDate(LocalDate foundDate) {
