@@ -35,7 +35,7 @@ public class MenuCommandServiceImpl implements MenuCommandService {
 	private final AmazonS3Manager s3Manager;
 
 	@Override
-	public List<Menu> createMenu(MenuRequestDTO request, Long venueId) {
+	public List<Menu> createMenu(MenuRequestDTO request, Long venueId, Member member) {
 		if (request.getImageUrl() == null) {
 			request.setImageUrl(new ArrayList<>());
 		}
@@ -44,6 +44,8 @@ public class MenuCommandServiceImpl implements MenuCommandService {
 
 		Venue venue = venueRepository.findById(venueId)
 			.orElseThrow(() -> new GeneralException(ErrorStatus.VENUE_NOT_FOUND));
+
+		validateOwner(member, venue);
 
 		for (MultipartFile image : request.getImageUrl()) {
 			String uuid = UUID.randomUUID().toString();
@@ -61,12 +63,14 @@ public class MenuCommandServiceImpl implements MenuCommandService {
 	}
 
 	@Override
-	public void deleteMenu(Long menuId, Long venueId) {
+	public void deleteMenu(Long menuId, Long venueId, Member member) {
 		Venue venue = venueRepository.findById(venueId)
 			.orElseThrow(() -> new GeneralException(ErrorStatus.VENUE_NOT_FOUND));
 
 		Menu menu = menuRepository.findById(menuId)
 			.orElseThrow(() -> new GeneralException(ErrorStatus.MENU_NOT_FOUND));
+
+		validateOwner(member, venue);
 
 		if (!menu.getVenue().equals(venue)) {
 			throw new GeneralException(ErrorStatus.MENU_VENUE_MISMATCH);
