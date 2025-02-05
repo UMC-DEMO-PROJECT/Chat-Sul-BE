@@ -12,9 +12,11 @@ import com.chatsul.apiPayload.code.status.ErrorStatus;
 import com.chatsul.apiPayload.exception.GeneralException;
 import com.chatsul.aws.AmazonS3Manager;
 import com.chatsul.converter.MenuConverter;
+import com.chatsul.domain.Member;
 import com.chatsul.domain.Menu;
 import com.chatsul.domain.Uuid;
 import com.chatsul.domain.Venue;
+import com.chatsul.domain.enums.Role;
 import com.chatsul.repository.MenuRepository;
 import com.chatsul.repository.UuidRepository;
 import com.chatsul.repository.VenueRepository;
@@ -56,5 +58,29 @@ public class MenuCommandServiceImpl implements MenuCommandService {
 		List<Menu> menuList = MenuConverter.toCreateMenuDTO(imageUrlList, venue);
 
 		return menuRepository.saveAll(menuList);
+	}
+
+	@Override
+	public void deleteMenu(Long menuId, Long venueId) {
+		Venue venue = venueRepository.findById(venueId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.VENUE_NOT_FOUND));
+
+		Menu menu = menuRepository.findById(menuId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.MENU_NOT_FOUND));
+
+		if (!menu.getVenue().equals(venue)) {
+			throw new GeneralException(ErrorStatus.MENU_VENUE_MISMATCH);
+		}
+
+		menuRepository.delete(menu);
+	}
+
+	private void validateOwner(Member member, Venue venue) {
+		if (!member.getRole().equals(Role.OWNER)) {
+			throw new GeneralException(ErrorStatus.MEMBER_ROLE_INVALID);
+		}
+		if (!venue.getMember().equals(member)) {
+			throw new GeneralException(ErrorStatus.VENUE_MEMBER_MISMATCH);
+		}
 	}
 }

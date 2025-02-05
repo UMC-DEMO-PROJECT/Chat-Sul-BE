@@ -8,4 +8,6 @@ import com.chatsul.web.dto.MenuRequestDTO;
 public interface MenuCommandService {
 
 	List<Menu> createMenu(MenuRequestDTO request, Long venueId);
+
+	void deleteMenu(Long menuId, Long venueId);
 }
