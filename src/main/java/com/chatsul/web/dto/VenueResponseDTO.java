@@ -2,7 +2,6 @@ package com.chatsul.web.dto;
 
 import java.util.List;
 
-import com.chatsul.domain.Member;
 import com.chatsul.domain.enums.Bank;
 
 import lombok.AllArgsConstructor;
@@ -26,7 +25,7 @@ public class VenueResponseDTO {
 		String account;
 		Double latitude;
 		Double longitude;
-		Member member;
+		Long memberId;
 	}
 
 	// 매장 클릭 시 반환

@@ -1,25 +1,29 @@
 package com.chatsul.web.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class LostItemRequestDTO {
 
-    @Getter
-    public static class RegisterLostItemRequestDTO {
-        private String title;
-        private String itemImg;
-        private String description;
-    }
+	@Getter
+	@Setter
+	public static class RegisterLostItemRequestDTO {
+		private String title;
+		private List<MultipartFile> itemImg;
+		private String description;
+	}
 
-    @Getter
-    public static class UpdateLostItemRequestDTO {
-        private String title;
-        private String itemImg;
-        private String description;
-        private LocalDate foundDate;
-    }
+	@Getter
+	@Setter
+	public static class UpdateLostItemRequestDTO {
+		private String title;
+		private List<MultipartFile> itemImg;
+		private String description;
+		private LocalDate foundDate;
+	}
 }

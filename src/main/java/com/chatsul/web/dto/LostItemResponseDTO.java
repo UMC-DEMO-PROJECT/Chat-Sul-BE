@@ -3,15 +3,9 @@ package com.chatsul.web.dto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Page;
-
-import com.chatsul.domain.LostItem;
-import com.chatsul.domain.Venue;
 import com.chatsul.domain.enums.LostItemStatus;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -70,7 +64,7 @@ public class LostItemResponseDTO {
 		private String title;
 		private LocalDate foundDate;
 		private LostItemStatus lostItemStatus;
-		private String itemImg;
+		private List<String> itemImg;
 		private String description;
 		private String venueName;
 	}
