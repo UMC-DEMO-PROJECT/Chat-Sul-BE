@@ -66,8 +66,9 @@ public class LostItem extends BaseEntity {
 		this.description = description;
 	}
 
-	public void updateItemImg(List<ItemImage> itemImageList) {
-		this.itemImageList = itemImageList;
+	public void updateItemImg(List<ItemImage> newItemImageList) {
+		this.itemImageList.clear();
+		this.itemImageList.addAll(newItemImageList);
 	}
 
 	public void updateFoundDate(LocalDate foundDate) {
