@@ -52,7 +52,8 @@ public class VenueController {
 	}
 
 	@Operation(summary = "매장 정보 반환 API",
-		description = "매장 클릭 시 해당 매장의 정보를 반환하는 API입니다.")
+		description = "매장 클릭 시 해당 매장의 정보를 반환하는 API입니다.<br>"
+			+ "조회할 매장 id를 입력해주세요.")
 	@GetMapping("/info/{venueId}")
 	public ApiResponse<VenueResponseDTO.VenueInfoDTO> getVenueInfo(@PathVariable("venueId") Long venueId) {
 		Venue venue = venueQueryService.getVenueInfo(venueId);
