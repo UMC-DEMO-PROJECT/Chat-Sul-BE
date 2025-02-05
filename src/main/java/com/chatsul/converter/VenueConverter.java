@@ -35,7 +35,7 @@ public class VenueConverter {
 			.account(venue.getAccount())
 			.latitude(venue.getLatitude())
 			.longitude(venue.getLongitude())
-			.member(venue.getMember())
+			.memberId(venue.getMember().getId())
 			.build();
 	}
 
