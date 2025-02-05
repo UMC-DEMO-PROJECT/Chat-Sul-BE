@@ -27,6 +27,7 @@ public enum ErrorStatus implements BaseErrorCode {
 	VENUE_NOT_FOUND(HttpStatus.NOT_FOUND, "VENUE404", "매장을 찾을 수 없습니다."),
 
 	// Menu
+	MENU_VENUE_MISMATCH(HttpStatus.FORBIDDEN, "MENU403", "해당 메뉴는 현재 매장과 일치하지 않습니다."),
 	MENU_NOT_FOUND(HttpStatus.NOT_FOUND, "MENU404", "메뉴를 찾을 수 없습니다."),
 
 	// Member

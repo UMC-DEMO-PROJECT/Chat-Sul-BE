@@ -35,7 +35,7 @@ public class AmazonS3Manager {
 		if (contentType != null && contentType.startsWith("image")) {
 			metadata.setContentType(contentType);  // 이미지 파일이라면 해당 contentType을 설정
 		}
-		
+
 		try {
 			amazonS3.putObject(
 				new PutObjectRequest(amazonConfig.getBucket(), keyName, file.getInputStream(), metadata));
@@ -47,5 +47,9 @@ public class AmazonS3Manager {
 
 	public String generateMenuKeyName(Uuid uuid) {
 		return amazonConfig.getMenuPath() + '/' + uuid.getUuid();
+	}
+
+	public String generateLostItemKeyName(Uuid uuid) {
+		return amazonConfig.getLostItemPath() + '/' + uuid.getUuid();
 	}
 }
