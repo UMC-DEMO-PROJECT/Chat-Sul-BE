@@ -1,7 +1,6 @@
 package com.chatsul.domain;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import com.chatsul.domain.common.BaseEntity;
 import com.chatsul.domain.enums.LostItemStatus;
@@ -16,7 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,8 +39,11 @@ public class LostItem extends BaseEntity {
 
 	private String description;
 
-	@OneToMany(mappedBy = "lostItem", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<ItemImage> itemImageList;
+	/*@OneToMany(mappedBy = "lostItem", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ItemImage> itemImageList;*/
+
+	@OneToOne(mappedBy = "lostItem", cascade = CascadeType.ALL, orphanRemoval = true)
+	private ItemImage itemImage;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
@@ -66,9 +68,13 @@ public class LostItem extends BaseEntity {
 		this.description = description;
 	}
 
-	public void updateItemImg(List<ItemImage> newItemImageList) {
+	/*public void updateItemImg(List<ItemImage> newItemImageList) {
 		this.itemImageList.clear();
 		this.itemImageList.addAll(newItemImageList);
+	}*/
+
+	public void updateItemImg(ItemImage itemImage) {
+		this.itemImage = itemImage;
 	}
 
 	public void updateFoundDate(LocalDate foundDate) {

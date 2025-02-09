@@ -11,6 +11,16 @@ import lombok.Setter;
 @Setter
 public class MenuRequestDTO {
 
-	List<MultipartFile> imageUrl;
+	@Getter
+	@Setter
+	public static class CreateMenuRequestDTO {
+		private List<MultipartFile> imageUrl;
+	}
+
+	@Getter
+	@Setter
+	public static class UpdateMenuRequestDTO {
+		private MultipartFile imageUrl;
+	}
 
 }

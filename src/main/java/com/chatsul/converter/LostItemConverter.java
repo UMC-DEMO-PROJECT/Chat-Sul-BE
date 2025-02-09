@@ -77,14 +77,15 @@ public class LostItemConverter {
 			.description(lostItem.getDescription())
 			.foundDate(lostItem.getFoundDate())
 			.lostItemStatus(lostItem.getLostItemStatus())
-			.itemImg(lostItem.getItemImageList().stream()
+			/*.itemImg(lostItem.getItemImageList().stream()
 				.map(ItemImage::getImageUrl)
-				.collect(Collectors.toList()))
+				.collect(Collectors.toList()))*/
+			.itemImg(lostItem.getItemImage().getImageUrl())
 			.venueName(lostItem.getVenue().getName())
 			.build();
 	}
 
-	public static List<ItemImage> multipartFilesToUrls(List<MultipartFile> files, UuidRepository uuidRepository,
+	/*public static List<ItemImage> multipartFilesToUrls(List<MultipartFile> files, UuidRepository uuidRepository,
 		AmazonS3Manager s3Manager, LostItem lostItem) {
 		return files.stream()
 			.map(file -> {
@@ -98,5 +99,18 @@ public class LostItemConverter {
 					.build();
 			})
 			.collect(Collectors.toList());
+	}*/
+
+	public static ItemImage multipartFileToUrl(MultipartFile file, UuidRepository uuidRepository,
+		AmazonS3Manager s3Manager, LostItem lostItem) {
+
+		String uuid = UUID.randomUUID().toString();
+		Uuid saveUuid = uuidRepository.save(Uuid.builder().uuid(uuid).build());
+		String imageUrl = s3Manager.uploadFile(s3Manager.generateLostItemKeyName(saveUuid), file);
+
+		return ItemImage.builder()
+			.imageUrl(imageUrl)
+			.lostItem(lostItem)
+			.build();
 	}
 }

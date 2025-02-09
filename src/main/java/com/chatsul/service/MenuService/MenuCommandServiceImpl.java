@@ -35,7 +35,7 @@ public class MenuCommandServiceImpl implements MenuCommandService {
 	private final AmazonS3Manager s3Manager;
 
 	@Override
-	public List<Menu> createMenu(MenuRequestDTO request, Long venueId, Member member) {
+	public List<Menu> createMenu(MenuRequestDTO.CreateMenuRequestDTO request, Long venueId, Member member) {
 		if (request.getImageUrl() == null) {
 			request.setImageUrl(new ArrayList<>());
 		}
@@ -77,6 +77,34 @@ public class MenuCommandServiceImpl implements MenuCommandService {
 		}
 
 		menuRepository.delete(menu);
+	}
+
+	@Override
+	public Menu updateMenu(MenuRequestDTO.UpdateMenuRequestDTO request, Long menuId, Long venueId,
+		Member member) {
+		Venue venue = venueRepository.findById(venueId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.VENUE_NOT_FOUND));
+		Menu menu = menuRepository.findById(menuId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.MENU_NOT_FOUND));
+
+		validateOwner(member, venue);
+
+		if (!menu.getVenue().equals(venue)) {
+			throw new GeneralException(ErrorStatus.MENU_VENUE_MISMATCH);
+		}
+
+		if (request.getImageUrl() != null) {
+			String uuid = UUID.randomUUID().toString();
+			Uuid saveUuid = uuidRepository.save(Uuid.builder()
+				.uuid(uuid).build());
+
+			String imageUrl = s3Manager.uploadFile(s3Manager.generateMenuKeyName(saveUuid),
+				request.getImageUrl());
+			
+			menu.updateImageUrl(imageUrl);
+		}
+
+		return menuRepository.save(menu);
 	}
 
 	private void validateOwner(Member member, Venue venue) {

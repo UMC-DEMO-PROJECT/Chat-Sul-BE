@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,10 +37,11 @@ public class MenuController {
 			+ "메뉴를 등록할 매장 id를 입력해주세요.<br>"
 			+ "메뉴 이미지는 여러 장일 수 있습니다.")
 	@PostMapping(value = "/add/{venueId}", consumes = "multipart/form-data")
-	public ApiResponse<List<MenuResponseDTO.CreateMenuDTO>> createMenu(@ModelAttribute MenuRequestDTO request,
+	public ApiResponse<List<MenuResponseDTO.CreateMenuDTO>> createMenu(
+		@ModelAttribute MenuRequestDTO.CreateMenuRequestDTO request,
 		@PathVariable("venueId") Long venueId, @CurrentMember Member member) {
 		List<Menu> menuList = menuCommandService.createMenu(request, venueId, member);
-		return ApiResponse.onSuccess(MenuConverter.menuResultDTO(menuList));
+		return ApiResponse.onSuccess(MenuConverter.menuListResultDTO(menuList));
 	}
 
 	@Operation(summary = "메뉴 이미지 반환 API",
@@ -54,11 +56,23 @@ public class MenuController {
 
 	@Operation(summary = "메뉴 이미지 삭제 API",
 		description = "매장 메뉴 이미지를 삭제하는 API입니다.<br>"
-			+ "삭제할 메뉴 id를 입력해주세요.")
+			+ "삭제할 매장 id와 메뉴 id를 입력해주세요.")
 	@DeleteMapping("/{venueId}/delete/{menuId}")
 	public ApiResponse<String> deleteMenu(@PathVariable("venueId") Long venueId, @PathVariable("menuId") Long menuId,
 		@CurrentMember Member member) {
 		menuCommandService.deleteMenu(menuId, venueId, member);
 		return ApiResponse.onSuccess("메뉴가 삭제되었습니다.");
+	}
+
+	@Operation(summary = "매장 메뉴 수정 API",
+		description = "매장 메뉴를 수정하는 API입니다.<br>"
+			+ "수정할 매장 id와 메뉴 id를 입력해주세요.<br>"
+			+ "메뉴 이미지는 여러 장일 수 있습니다.")
+	@PatchMapping(value = "{venueId}/update/{menuId}", consumes = "multipart/form-data")
+	public ApiResponse<MenuResponseDTO.CreateMenuDTO> updateMenu(
+		@ModelAttribute MenuRequestDTO.UpdateMenuRequestDTO request,
+		@PathVariable("venueId") Long venueId, @PathVariable("menuId") Long menuId, @CurrentMember Member member) {
+		Menu menu = menuCommandService.updateMenu(request, menuId, venueId, member);
+		return ApiResponse.onSuccess(MenuConverter.menuResultDTO(menu));
 	}
 }

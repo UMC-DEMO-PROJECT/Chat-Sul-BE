@@ -1,7 +1,6 @@
 package com.chatsul.web.dto;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,7 +13,8 @@ public class LostItemRequestDTO {
 	@Setter
 	public static class RegisterLostItemRequestDTO {
 		private String title;
-		private List<MultipartFile> itemImg;
+		// private List<MultipartFile> itemImg;
+		private MultipartFile itemImg; // 단일 파일로 변경
 		private String description;
 	}
 
@@ -22,7 +22,8 @@ public class LostItemRequestDTO {
 	@Setter
 	public static class UpdateLostItemRequestDTO {
 		private String title;
-		private List<MultipartFile> itemImg;
+		// private List<MultipartFile> itemImg;
+		private MultipartFile itemImg; // 단일 파일로 변경
 		private String description;
 		private LocalDate foundDate;
 	}
