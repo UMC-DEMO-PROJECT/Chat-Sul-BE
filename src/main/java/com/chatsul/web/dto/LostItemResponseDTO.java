@@ -55,7 +55,7 @@ public class LostItemResponseDTO {
 		Boolean isLast;
 	}
 
-	@Getter
+	/*@Getter
 	@Builder
 	@NoArgsConstructor
 	@AllArgsConstructor
@@ -65,6 +65,20 @@ public class LostItemResponseDTO {
 		private LocalDate foundDate;
 		private LostItemStatus lostItemStatus;
 		private List<String> itemImg;
+		private String description;
+		private String venueName;
+	}*/
+
+	@Getter
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class LostItemDetailDTO {  //상세 조회
+		private Long lostItemId;
+		private String title;
+		private LocalDate foundDate;
+		private LostItemStatus lostItemStatus;
+		private String itemImg;
 		private String description;
 		private String venueName;
 	}

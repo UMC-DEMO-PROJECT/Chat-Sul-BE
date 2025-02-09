@@ -9,7 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +31,11 @@ public class ItemImage extends BaseEntity {
 	@Column(nullable = false)
 	private String imageUrl;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	/*@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "lostItem_id")
+	private LostItem lostItem;*/
+
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "lostItem_id")
 	private LostItem lostItem;
 }

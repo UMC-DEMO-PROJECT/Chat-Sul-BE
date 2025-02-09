@@ -1,8 +1,5 @@
 package com.chatsul.service.LostItemService;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +32,7 @@ public class LostItemCommandServiceImpl implements LostItemCommandService {
 	private final UuidRepository uuidRepository;
 	private final ItemIamgeRepository itemIamgeRepository;
 
-	@Override
+	/*@Override
 	public LostItem saveLostItem(LostItemRequestDTO.RegisterLostItemRequestDTO request, Long venueId, Member member) {
 		if (request.getItemImg() == null) {
 			request.setItemImg(new ArrayList<>());
@@ -52,6 +49,26 @@ public class LostItemCommandServiceImpl implements LostItemCommandService {
 			request.getItemImg(), uuidRepository, s3Manager, lostItem);
 
 		itemIamgeRepository.saveAll(imageUrlList);
+
+		return lostItemRepository.save(lostItem);
+	}*/
+
+	@Override
+	public LostItem saveLostItem(LostItemRequestDTO.RegisterLostItemRequestDTO request, Long venueId, Member member) {
+		Venue venue = venueRepository.findById(venueId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.VENUE_NOT_FOUND));
+
+		validateOwner(member, venue);
+
+		LostItem lostItem = LostItemConverter.toLostItem(request, venue, member);
+
+		// 단일 파일 처리
+		if (request.getItemImg() != null) {
+			ItemImage image = LostItemConverter.multipartFileToUrl(
+				request.getItemImg(), uuidRepository, s3Manager, lostItem);
+
+			itemIamgeRepository.save(image);
+		}
 
 		return lostItemRepository.save(lostItem);
 	}
@@ -90,7 +107,7 @@ public class LostItemCommandServiceImpl implements LostItemCommandService {
 		lostItemRepository.save(lostItem);
 	}
 
-	@Override
+	/*@Override
 	public LostItem updateLostItem(LostItemRequestDTO.UpdateLostItemRequestDTO request, Long lostItemId, Long venueId,
 		Member member) {
 
@@ -112,6 +129,36 @@ public class LostItemCommandServiceImpl implements LostItemCommandService {
 				request.getItemImg(), uuidRepository, s3Manager, lostItem);
 
 			lostItem.updateItemImg(imageUrlList);
+		}
+		if (request.getDescription() != null)
+			lostItem.updateDescription(request.getDescription());
+		if (request.getFoundDate() != null)
+			lostItem.updateFoundDate(request.getFoundDate());
+
+		return lostItemRepository.save(lostItem);
+	}*/
+
+	@Override
+	public LostItem updateLostItem(LostItemRequestDTO.UpdateLostItemRequestDTO request, Long lostItemId, Long venueId,
+		Member member) {
+
+		LostItem lostItem = lostItemRepository.findById(lostItemId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LostItem_NOT_FOUND));
+		Venue venue = venueRepository.findById(venueId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.VENUE_NOT_FOUND));
+
+		validateOwner(member, venue);
+
+		if (!lostItem.getVenue().equals(venue)) {
+			throw new GeneralException(ErrorStatus.LOST_ITEM_VENUE_MISMATCH);
+		}
+
+		if (request.getTitle() != null)
+			lostItem.updateTitle(request.getTitle());
+		if (request.getItemImg() != null) {
+			ItemImage image = LostItemConverter.multipartFileToUrl(
+				request.getItemImg(), uuidRepository, s3Manager, lostItem);
+			lostItem.updateItemImg(image);
 		}
 		if (request.getDescription() != null)
 			lostItem.updateDescription(request.getDescription());
