@@ -71,7 +71,7 @@ public class LostItemController {
 		return ApiResponse.onSuccess(lostItemDetail);
 	}
 
-	@Operation(summary = "사장님용 분실물 등록 API", description = "이미지는 여러 장일 수 있습니다.")
+	@Operation(summary = "사장님용 분실물 등록 API", description = "이미지는 필수입니다.")
 	@PostMapping(value = "/business/{venueId}/post", consumes = "multipart/form-data")  //분실물 등록
 	public ApiResponse<LostItemResponseDTO.LostItemResultDTO> createLostItem(
 		@PathVariable("venueId") Long venueId,
@@ -109,7 +109,8 @@ public class LostItemController {
 		return ApiResponse.onSuccess(LostItemConverter.lostItemPreViewListDTO(lostItems));
 	}
 
-	@Operation(summary = "사장님용 분실물 수정 API", description = "수정할 분실물의 id를 입력하세요")
+	@Operation(summary = "사장님용 분실물 수정 API", description = "수정할 분실물의 id를 입력하세요<br>"
+		+ "이미지는 필수입니다.")
 	@PatchMapping(value = "/business/{venueId}/update/{lostItemId}", consumes = "multipart/form-data")
 	public ApiResponse<LostItemResponseDTO.LostItemResultDTO> updateLostItem(
 		@PathVariable("venueId") Long venueId, @PathVariable("lostItemId") Long lostItemId,
