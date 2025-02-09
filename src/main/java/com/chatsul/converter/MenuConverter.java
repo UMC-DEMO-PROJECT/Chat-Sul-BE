@@ -18,13 +18,20 @@ public class MenuConverter {
 			.collect(Collectors.toList());
 	}
 
-	public static List<MenuResponseDTO.CreateMenuDTO> menuResultDTO(List<Menu> menuList) {
+	public static List<MenuResponseDTO.CreateMenuDTO> menuListResultDTO(List<Menu> menuList) {
 		return menuList.stream()
 			.map(menu -> MenuResponseDTO.CreateMenuDTO.builder()
 				.menuId(menu.getId())
 				.imageUrl(menu.getImageUrl())
 				.build())
 			.collect(Collectors.toList());
+	}
+
+	public static MenuResponseDTO.CreateMenuDTO menuResultDTO(Menu menu) {
+		return MenuResponseDTO.CreateMenuDTO.builder()
+			.menuId(menu.getId())
+			.imageUrl(menu.getImageUrl())
+			.build();
 	}
 
 	public static List<MenuResponseDTO.MenuImageListDTO.MenuImageDTO> menuImageDTO(List<Menu> imageList) {
