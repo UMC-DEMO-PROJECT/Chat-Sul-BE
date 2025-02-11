@@ -56,14 +56,13 @@ public class Venue extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private Bank bank;
 
+	@OneToOne
+	@JoinColumn(name = "member_id")
+	private Member member;
+
 	@OneToMany(mappedBy = "venue", cascade = CascadeType.ALL)
 	private List<Reservation> reservationList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "venue", cascade = CascadeType.ALL)
 	private List<LostItem> lostItemList = new ArrayList<>();
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_id")
-	private Member member;
-
 }

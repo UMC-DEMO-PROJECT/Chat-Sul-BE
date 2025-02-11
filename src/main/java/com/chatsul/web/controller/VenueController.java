@@ -39,7 +39,7 @@ public class VenueController {
 	public ApiResponse<VenueResponseDTO.CreateVenueDTO> createVenue(@CurrentMember Member member,
 		@RequestBody VenueRequestDTO request) {
 		Venue venue = venueCommandService.createVenue(member, request);
-		return ApiResponse.onSuccess(VenueConverter.VenueResultDTO(venue));
+		return ApiResponse.onSuccess(VenueConverter.VenueResultDTO(venue, member));
 	}
 
 	@Operation(summary = "위도, 경도 반환 API",

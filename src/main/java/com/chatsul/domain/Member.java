@@ -48,8 +48,8 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<LostItem> lostItemList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Venue> venues = new ArrayList<>();
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Venue venue;
 
     public void encodePassword(String password) {
         this.password = password;
@@ -62,8 +62,18 @@ public class Member extends BaseEntity {
         this.role = Role.USER;
     }
 
+    public boolean isOwner() {
+        return this.role == Role.OWNER;
+    }
+
+    public void registerVenueAndBecomeOwner(Venue venue) {
+        this.venue = venue;
+        this.updateRoleToOwner();
+    }
+
     // 사장님 권한 부여
-    public void updateRoleToOwner() {
+    private void updateRoleToOwner() {
         this.role = Role.OWNER;
     }
+
 }

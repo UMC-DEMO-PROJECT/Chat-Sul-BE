@@ -51,10 +51,7 @@ public enum ErrorStatus implements BaseErrorCode {
 	// OAuth
 	OAUTH_TOKEN_FAIL(HttpStatus.BAD_REQUEST, "OAUTH400", "토큰 변경 실패"),
 	OAUTH_USER_INFO_FAIL(HttpStatus.NOT_FOUND, "OAUTH401", "사용자 정보를 가져오지 못했습니다"),
-	INVALID_PROVIDER(HttpStatus.BAD_REQUEST, "OAUTH402", "올바르지 않은 플랫폼입니다."),
-
-	// For test
-	TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트");
+	INVALID_PROVIDER(HttpStatus.BAD_REQUEST, "OAUTH402", "올바르지 않은 플랫폼입니다.");
 
 	private final HttpStatus httpStatus;
 	private final String code;
