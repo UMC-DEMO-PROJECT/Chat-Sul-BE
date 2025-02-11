@@ -66,4 +66,8 @@ public class Member extends BaseEntity {
     public void updateRoleToOwner() {
         this.role = Role.OWNER;
     }
+
+    public boolean isOwner() {
+        return this.role == Role.OWNER;
+    }
 }

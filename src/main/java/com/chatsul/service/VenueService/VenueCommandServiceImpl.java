@@ -5,6 +5,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.chatsul.apiPayload.code.status.ErrorStatus;
+import com.chatsul.apiPayload.exception.GeneralException;
 import com.chatsul.converter.VenueConverter;
 import com.chatsul.domain.Member;
 import com.chatsul.domain.Venue;
@@ -23,6 +25,10 @@ public class VenueCommandServiceImpl implements VenueCommandService {
 
 	@Override
 	public Venue createVenue(Member member, VenueRequestDTO request) {
+		if (member.isOwner()) {
+			throw new GeneralException(ErrorStatus.MEMBER_ROLE_INVALID);
+		}
+
 		Map<String, Double> coordinates = kakaoMapService.getCoordinates(request.getAddress());
 
 		Double latitude = coordinates.get("latitude");

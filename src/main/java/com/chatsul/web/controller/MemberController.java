@@ -84,7 +84,7 @@ public class MemberController {
 	@Operation(summary = "소셜로그인 설명 API", description = "소셜 로그인 과정 설명입니다. <br />"
 		+ "1. (백엔드배포주소)/oauth2/authorization/(kakao 또는 naver)로 연결 <br />"
 		+ "2. 소셜 로그인 성공 시 (프론트엔드배포주소)/login/social?access_token=(accessToken)&role=(role) 주소로 파라미터를 가지고 리다이렉트됩니다. (주소는 필요시 변경가능합니다!) <br />"
-		+ "2 - 1. 사장인 경우 (프론트엔드배포주소)/login/social?access_token=(accessToken)&role=(role)&venueIds=(id)&venueIds=(id)와 같이 리스트 형식으로 가게 정보가 전달됩니다. <br />"
+		+ "2 - 1. 사장인 경우 (프론트엔드배포주소)/login/social?access_token=(accessToken)&role=(role)&venueId=(id)와 같이 가게 정보가 전달됩니다. <br />"
 		+ "---- accessToken은 로그인이 필요한 서비스의 경우 Authorization 헤더에 'Bearer (accessToken)' 형식으로 담아서 보내주세요. <br />"
 		+ "3. role이 TEMP인 경우 소셜회원가입 추가 정보 기입 화면으로 이동 <br />"
 		+ "4. 그 외의 role인 경우 정상적으로 서비스 이용")

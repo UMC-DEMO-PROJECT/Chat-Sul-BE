@@ -41,7 +41,7 @@ public class MemberConverter {
 		return MemberResponseDTO.LoginSuccessDTO.builder()
 			.accessToken(accessToken)
 			.role(role)
-			.venueIds(venueIds)
+			.venueId(venueIds.get(0))
 			.build();
 	}
 }

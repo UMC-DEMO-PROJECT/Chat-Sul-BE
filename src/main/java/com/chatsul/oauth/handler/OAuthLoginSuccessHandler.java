@@ -67,16 +67,10 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 	}
 
 	private String addVenueIdsIfMemberIsOwner(Member member, String redirectUri) {
-		if (member.getRole() == Role.OWNER) {
-			List<Long> venueIds = member.getVenues().stream()
-				.map(Venue::getId)
-				.toList();
-
-			StringBuilder sb = new StringBuilder(redirectUri);
-			for (Long venueId : venueIds) {
-				sb.append("&venueIds=").append(venueId);
-			}
-			redirectUri = sb.toString();
+		if (member.isOwner()) {
+			// 인당 사업자 등록 1번만 가능하도록 임시 조치
+			Long venueId = member.getVenues().get(0).getId();
+			redirectUri = redirectUri + "&venueId=" + venueId;
 		}
 		return redirectUri;
 	}
