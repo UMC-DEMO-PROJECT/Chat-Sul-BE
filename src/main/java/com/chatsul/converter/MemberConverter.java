@@ -1,7 +1,6 @@
 package com.chatsul.converter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.chatsul.domain.Member;
 import com.chatsul.domain.enums.Role;
@@ -36,12 +35,11 @@ public class MemberConverter {
 			.build();
 	}
 
-	public static MemberResponseDTO.LoginSuccessDTO toLoginSuccessDTO(String accessToken, Role role,
-		List<Long> venueIds) {
+	public static MemberResponseDTO.LoginSuccessDTO toLoginSuccessDTO(String accessToken, Role role, Long venueId) {
 		return MemberResponseDTO.LoginSuccessDTO.builder()
 			.accessToken(accessToken)
 			.role(role)
-			.venueIds(venueIds)
+			.venueId(venueId)
 			.build();
 	}
 }

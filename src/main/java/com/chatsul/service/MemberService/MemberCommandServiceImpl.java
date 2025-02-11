@@ -1,7 +1,5 @@
 package com.chatsul.service.MemberService;
 
-import java.util.List;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +7,6 @@ import com.chatsul.apiPayload.code.status.ErrorStatus;
 import com.chatsul.apiPayload.exception.GeneralException;
 import com.chatsul.converter.MemberConverter;
 import com.chatsul.domain.Member;
-import com.chatsul.domain.Venue;
 import com.chatsul.domain.enums.Role;
 import com.chatsul.repository.MemberRepository;
 import com.chatsul.util.CookieUtil;
@@ -63,9 +60,9 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 		String accessToken = jwtUtil.generateAccessToken(loginMember.getEmail());
 		setRefreshToken(dto.getEmail(), response);
 
-		List<Long> venueIds = getVenueIdsIfMemberIsOwner(loginMember);
+		Long venueId = getVenueIdIfMemberIsOwner(loginMember);
 
-		return MemberConverter.toLoginSuccessDTO(accessToken, loginMember.getRole(), venueIds);
+		return MemberConverter.toLoginSuccessDTO(accessToken, loginMember.getRole(), venueId);
 	}
 
 	private void setRefreshToken(String email, HttpServletResponse response) {
@@ -78,13 +75,10 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 	}
 
 	// 사용자가 사장이라면 매장 Id 반환
-	private static List<Long> getVenueIdsIfMemberIsOwner(Member loginMember) {
-		List<Long> venueIds = null;
-		if (loginMember.getRole() == Role.OWNER) {
-			venueIds = loginMember.getVenues().stream()
-				.map(Venue::getId)
-				.toList();
+	private static Long getVenueIdIfMemberIsOwner(Member loginMember) {
+		if (!loginMember.isOwner()) {
+			return null;
 		}
-		return venueIds;
+		return loginMember.getVenue().getId();
 	}
 }

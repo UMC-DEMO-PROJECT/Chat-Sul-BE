@@ -1,7 +1,6 @@
 package com.chatsul.oauth.handler;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -11,8 +10,6 @@ import org.springframework.stereotype.Component;
 import com.chatsul.apiPayload.code.status.ErrorStatus;
 import com.chatsul.apiPayload.exception.GeneralException;
 import com.chatsul.domain.Member;
-import com.chatsul.domain.Venue;
-import com.chatsul.domain.enums.Role;
 import com.chatsul.jwt.principal.PrincipalDetails;
 import com.chatsul.repository.MemberRepository;
 import com.chatsul.util.CookieUtil;
@@ -50,12 +47,8 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 		// 액세스 토큰 발급
 		String accessToken = jwtUtil.generateAccessToken(member.getEmail());
 
-		// venues 로딩용
-		Member fullMember = memberRepository.findByIdWithVenues(member.getId())
-			.orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
-
-		// 액세스 토큰, role, venueId를 담아 리다이렉트
-		String redirectUri = setRedirectUri(accessToken, fullMember);
+		// 액세스 토큰, role, venueId를 담아 리다이렉트 uri 생성
+		String redirectUri = setRedirectUri(accessToken, member);
 
 		getRedirectStrategy().sendRedirect(request, response, redirectUri);
 	}
@@ -67,16 +60,8 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 	}
 
 	private String addVenueIdsIfMemberIsOwner(Member member, String redirectUri) {
-		if (member.getRole() == Role.OWNER) {
-			List<Long> venueIds = member.getVenues().stream()
-				.map(Venue::getId)
-				.toList();
-
-			StringBuilder sb = new StringBuilder(redirectUri);
-			for (Long venueId : venueIds) {
-				sb.append("&venueIds=").append(venueId);
-			}
-			redirectUri = sb.toString();
+		if (member.isOwner()) {
+			redirectUri = redirectUri + "&venueId=" + member.getVenue().getId();
 		}
 		return redirectUri;
 	}

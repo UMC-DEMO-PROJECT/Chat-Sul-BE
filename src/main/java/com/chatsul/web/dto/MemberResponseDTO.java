@@ -21,6 +21,6 @@ public class MemberResponseDTO {
 	public static class LoginSuccessDTO {
 		String accessToken;
 		Role role;
-		List<Long> venueIds;
+		Long venueId;
 	}
 }
