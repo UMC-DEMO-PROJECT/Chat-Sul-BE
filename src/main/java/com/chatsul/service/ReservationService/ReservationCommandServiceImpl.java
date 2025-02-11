@@ -7,8 +7,6 @@ import com.chatsul.domain.Member;
 import com.chatsul.domain.Reservation;
 import com.chatsul.domain.Venue;
 import com.chatsul.domain.enums.ReservationStatus;
-import com.chatsul.domain.enums.Role;
-import com.chatsul.repository.MemberRepository;
 import com.chatsul.repository.ReservationRepository;
 import com.chatsul.repository.VenueRepository;
 import com.chatsul.web.dto.ReservationRequestDTO;
@@ -105,10 +103,11 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
 
     // 사장 확인
     private void validateOwner(Member member, Venue venue) {
-        if (!member.getRole().equals(Role.OWNER)) {
+        if (!member.isOwner()) {
             throw new GeneralException(ErrorStatus.MEMBER_ROLE_INVALID);
         }
-        if (!venue.getMember().equals(member)) {
+
+        if (!member.getVenue().getId().equals(venue.getId())) {
             throw new GeneralException(ErrorStatus.VENUE_MEMBER_MISMATCH);
         }
     }

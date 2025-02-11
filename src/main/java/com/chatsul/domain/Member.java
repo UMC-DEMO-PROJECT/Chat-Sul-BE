@@ -62,8 +62,18 @@ public class Member extends BaseEntity {
         this.role = Role.USER;
     }
 
+    public boolean isOwner() {
+        return this.role == Role.OWNER;
+    }
+
+    public void registerVenueAndBecomeOwner(Venue venue) {
+        this.venue = venue;
+        this.updateRoleToOwner();
+    }
+
     // 사장님 권한 부여
-    public void updateRoleToOwner() {
+    private void updateRoleToOwner() {
         this.role = Role.OWNER;
     }
+
 }

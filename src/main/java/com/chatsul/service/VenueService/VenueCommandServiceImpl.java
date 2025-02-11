@@ -23,6 +23,10 @@ public class VenueCommandServiceImpl implements VenueCommandService {
 
 	@Override
 	public Venue createVenue(Member member, VenueRequestDTO request) {
+		if (member.isOwner()) {
+			throw new GeneralException(ErrorStatus.MEMBER_ROLE_INVALID);
+		}
+
 		Map<String, Double> coordinates = kakaoMapService.getCoordinates(request.getAddress());
 
 		Double latitude = coordinates.get("latitude");
@@ -30,7 +34,7 @@ public class VenueCommandServiceImpl implements VenueCommandService {
 
 		Venue venue = VenueConverter.toCreateVenueDTO(request, member, latitude, longitude);
 
-		member.updateRoleToOwner();
+		member.registerVenueAndBecomeOwner(venue);
 
 		return venueRepository.save(venue);
 	}

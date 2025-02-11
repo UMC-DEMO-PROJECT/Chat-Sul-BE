@@ -108,11 +108,11 @@ public class ReservationQueryServiceImpl implements ReservationQueryService {
     }
 
     private void validateOwner(Member member, Venue venue) {
-        if (!member.getRole().equals(Role.OWNER)) {
+        if (!member.isOwner()) {
             throw new GeneralException(ErrorStatus.MEMBER_ROLE_INVALID);
         }
 
-        if (!venue.getMember().equals(member)) {
+        if (!member.getVenue().getId().equals(venue.getId())) {
             throw new GeneralException(ErrorStatus.VENUE_MEMBER_MISMATCH);
         }
     }
