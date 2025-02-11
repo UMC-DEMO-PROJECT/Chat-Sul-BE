@@ -48,8 +48,8 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<LostItem> lostItemList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Venue> venues = new ArrayList<>();
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Venue venue;
 
     public void encodePassword(String password) {
         this.password = password;
