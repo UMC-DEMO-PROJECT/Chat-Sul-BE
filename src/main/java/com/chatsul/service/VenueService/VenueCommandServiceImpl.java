@@ -5,6 +5,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.chatsul.apiPayload.code.status.ErrorStatus;
+import com.chatsul.apiPayload.exception.GeneralException;
 import com.chatsul.converter.VenueConverter;
 import com.chatsul.domain.Member;
 import com.chatsul.domain.Venue;
@@ -32,7 +34,7 @@ public class VenueCommandServiceImpl implements VenueCommandService {
 		Double latitude = coordinates.get("latitude");
 		Double longitude = coordinates.get("longitude");
 
-		Venue venue = VenueConverter.toCreateVenueDTO(request, member, latitude, longitude);
+		Venue venue = VenueConverter.toCreateVenueDTO(request, latitude, longitude, member);
 
 		member.registerVenueAndBecomeOwner(venue);
 

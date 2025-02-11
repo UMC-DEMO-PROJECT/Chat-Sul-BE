@@ -10,7 +10,7 @@ import com.chatsul.web.dto.VenueResponseDTO;
 
 public class VenueConverter {
 
-	public static Venue toCreateVenueDTO(VenueRequestDTO request, Member member, Double latitude, Double longitude) {
+	public static Venue toCreateVenueDTO(VenueRequestDTO request, Double latitude, Double longitude, Member member) {
 		return Venue.builder()
 			.name(request.getName())
 			.address(request.getAddress())
@@ -24,7 +24,7 @@ public class VenueConverter {
 			.build();
 	}
 
-	public static VenueResponseDTO.CreateVenueDTO VenueResultDTO(Venue venue) {
+	public static VenueResponseDTO.CreateVenueDTO VenueResultDTO(Venue venue, Member member) {
 		return VenueResponseDTO.CreateVenueDTO.builder()
 			.venueId(venue.getId())
 			.name(venue.getName())
@@ -35,7 +35,7 @@ public class VenueConverter {
 			.account(venue.getAccount())
 			.latitude(venue.getLatitude())
 			.longitude(venue.getLongitude())
-			.memberId(venue.getMember().getId())
+			.memberId(member.getId())
 			.build();
 	}
 
