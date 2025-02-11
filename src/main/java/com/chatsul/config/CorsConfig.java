@@ -16,8 +16,8 @@ public class CorsConfig {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
 
-		// 최종 배포 시 localhost 제거 필요
-		config.setAllowedOrigins(List.of("http://localhost:5173", "https://d2nedo6zm8w85b.cloudfront.net", "https://chatsull.store"));
+		// 최종 배포 시 localhost, chatsull.store 제거 필요
+		config.setAllowedOrigins(List.of("http://localhost:5173", "https://d2nedo6zm8w85b.cloudfront.net", "https://chatsull.store", "https://chatsul.shop"));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 
 		// 쿠키 관련 설정
